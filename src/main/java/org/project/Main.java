@@ -1,5 +1,10 @@
 package org.project;
-import de.mkammerer.argon2.*;
+
+import de.mkammerer.argon2.Argon2;
+import de.mkammerer.argon2.Argon2Factory;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
+
 public class Main {
     public static void main(String[] args) {
 
@@ -19,8 +24,16 @@ public class Main {
             // Wipe confidential data
             argon2.wipeArray(password);
         }
-
-
         System.out.println("Hello world!");
+
+        try (JedisPool pool = new JedisPool("localhost", 6379)) {
+            try (Jedis jedis = pool.getResource()) {
+                jedis.set("foo", "bar");
+                String value = jedis.get("foo");
+                System.out.println(value);
+            }
+
+        }
+
     }
 }
