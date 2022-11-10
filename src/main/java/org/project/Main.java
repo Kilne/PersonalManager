@@ -29,7 +29,7 @@ public class Main {
         try (JedisPool pool = new JedisPool("localhost", 6379)) {
             try (Jedis jedis = pool.getResource()) {
 
-                System.out.println(jedis.ping());
+                System.out.println(jedis.set("foo", "bar"));
 
             }
 
