@@ -1,48 +1,63 @@
 package org.project.database.redis;
 
-import org.project.database.operations.CrudOperations;
+import redis.clients.jedis.JedisPooled;
 
-public class RedisClient implements CrudOperations {
+/**
+ * RedisClient
+ *
+ * @author Luca Maiuri
+ */
+public class RedisClient implements RedisBasicClient {
 
-    private final RedisConnectorManager redisConnectorManager;
-
-    public RedisClient(RedisConnectorManager redisConnectorManager) {
-        this.redisConnectorManager = redisConnectorManager;
+    private JedisPooled jedisPooled;
+    
+    public RedisClient(JedisPooled jedisPooled) {
+        this.jedisPooled = jedisPooled;
     }
-
 
     /**
-     * Create a new record
-     *
-     * @param key   key of the record
-     * @param value value to be stored
-     * @param <T>   type of key and value
-     * @return true if operation is successful
-     * @throws IllegalArgumentException if key is not a string
+     * @param key 
+     * @param value
+     * @return
      */
     @Override
-    public <T> boolean create(T key, T value) {
-        if(key instanceof String) {
-            return redisConnectorManager.getJedisPool().set((String) key, (String) value).equals("OK");
-        }else {
-            throw new IllegalArgumentException("Key must be a String");
-        }
-
+    public boolean set(String key, String value) {
+        return false;
     }
 
+    /**
+     * @param key 
+     * @return
+     */
     @Override
-    public <T> T read(T key) {
+    public String get(String key) {
         return null;
     }
 
+    /**
+     * @param key 
+     * @return
+     */
     @Override
-    public <T> boolean update(T key, T value) {
+    public boolean delete(String key) {
         return false;
     }
 
+    /**
+     * @param key 
+     * @param value
+     * @return
+     */
     @Override
-    public <T> boolean delete(T key) {
+    public boolean update(String key, String value) {
         return false;
+    }
+
+    /**
+     * @return 
+     */
+    @Override
+    public String ping() {
+        return null;
     }
 }
-
