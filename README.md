@@ -1,4 +1,4 @@
-# CORSO DI PROGRAMMAZIONE 3 - A.A. 2021/2022
+# CORSO DI PROGRAMMAZIONE 3 - A.A. 2022/23
 
 ## PROGETTO ESAME
 
@@ -9,7 +9,6 @@ gestione di login e password di ciascun utente.
 
 ### Specifiche
 
-- L'applicazione deve essere realizzata in JAVA utilizzando un approccio TDD (Test Driven Development) 
 - Database REDIS
 - Sicurezza dati di accesso ARGON2
 - Sicurezza dati utente AES256
