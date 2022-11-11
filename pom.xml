@@ -14,22 +14,11 @@
             <artifactId>argon2-jvm</artifactId>
             <version>2.11</version>
         </dependency>
-        <!--        REDIS JEDIS CLIENT LIBRARY-->
+        <!-- LETTUCE REDIS CLIENT-->
         <dependency>
-            <groupId>redis.clients</groupId>
-            <artifactId>jedis</artifactId>
-            <version>4.3.1</version>
-        </dependency>
-        <!--        JEDIS SLF4J NOP LOGGER FIX-->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>2.0.3</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>2.0.3</version>
+            <groupId>io.lettuce</groupId>
+            <artifactId>lettuce-core</artifactId>
+            <version>6.2.1.RELEASE</version>
         </dependency>
     </dependencies>
 

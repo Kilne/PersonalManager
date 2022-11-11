@@ -2,6 +2,7 @@ package org.project;
 
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
+import org.project.database.DatabaseRedis;
 
 
 public class Main {
@@ -24,6 +25,7 @@ public class Main {
             argon2.wipeArray(password);
         }
 
+        DatabaseRedis databaseRedis = new DatabaseRedis("localhost", 6379);
 
     }
 }
