@@ -2,7 +2,6 @@ package org.project;
 
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
-import org.project.database.DatabaseRedis;
 
 
 public class Main {
@@ -17,7 +16,7 @@ public class Main {
         try {
             // Hash password
             String hash = argon2.hash(10, 65536, 1, password);
-
+            System.out.println(hash);
             // Verify password
             argon2.verify(hash, password);// Hash matches password
         } finally {
@@ -25,7 +24,6 @@ public class Main {
             argon2.wipeArray(password);
         }
 
-        DatabaseRedis databaseRedis = new DatabaseRedis("localhost", 6379);
 
     }
 }
