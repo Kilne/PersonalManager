@@ -2,16 +2,16 @@
 
 ## PROGETTO ESAME
 
-Il progetto esame consiste nella realizzazione di un'applicazione web che permetta di gestire un database 
-standalone che permetta di gestire i progetti personali di più 
-utenti tramite interazione con un proprio database e che preveda
-gestione di login e password di ciascun utente.
+Il progetto esame consiste nella realizzazione di
+un'applicazione in java che si interfacci  
+con un database e che attraverso di esso gestisca
+l'organizzazione di progetti personali di un utente.
 
-### Specifiche
+### Framework e tecnologie extra
 
-- Database REDIS
-- Sicurezza dati di accesso ARGON2
-- Sicurezza dati utente AES256
+- Database POSTGRES
+- JavaFX
+- POSTGRES RLS
 
 ### Funzionalità
 
