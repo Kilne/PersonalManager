@@ -6,12 +6,14 @@ package org.project.database;
  * @author Luca Maiuri
  */
 @SuppressWarnings("unused")
-public class PostgreBuilder implements UriBuilderInterface {
+public class PostgreBuilder implements UriBuilderInterface<MyPostgreWrapper> {
 
     private String buildedUrl = "jdbc:postgresql://localhost:5432/postgres";
+    private MyPostgreWrapper postgreWrapper;
 
     @Override
     public void reset() {
+        this.postgreWrapper = null;
         this.buildedUrl = "jdbc:postgresql://localhost:5432/postgres";
     }
 
@@ -49,7 +51,12 @@ public class PostgreBuilder implements UriBuilderInterface {
     }
 
     @Override
-    public String build() {
-        return this.buildedUrl;
+    public MyPostgreWrapper build() {
+        if (this.postgreWrapper == null) {
+            this.postgreWrapper = new MyPostgreWrapper(this.buildedUrl);
+        }
+        return this.postgreWrapper;
     }
+
+
 }

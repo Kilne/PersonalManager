@@ -1,12 +1,12 @@
 package org.project.database;
 
 /**
- * Uri Builder abstraction.
+ * Uri Builder for PostgreSQL database.
  *
- * @author Luca Maiuri
+ * @param <T> Type of the object returned by the build method.
  */
 @SuppressWarnings("unused")
-public interface UriBuilderInterface {
+public interface UriBuilderInterface<T> {
     void reset();
 
     void withHost(String host);
@@ -19,5 +19,5 @@ public interface UriBuilderInterface {
 
     void withPassword(String password);
 
-    String build();
+    T build();
 }
