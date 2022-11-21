@@ -17,7 +17,7 @@ public class MyPostgreWrapper implements CommonDatabaseActions, CommonSqlDatabas
     private Connection connection;
     private String url;
 
-    public MyPostgreWrapper(String url) {
+    protected MyPostgreWrapper(String url) {
         this.url = url;
     }
 
