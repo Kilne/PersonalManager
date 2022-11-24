@@ -12,7 +12,8 @@ import java.util.ArrayList;
  * @author Luca Maiuri
  */
 @SuppressWarnings("unused")
-public class MyPostgreWrapper implements CommonDatabaseActions, CommonSqlDatabaseCRUD<String, Integer, Integer, Integer> {
+public class MyPostgreWrapper implements CommonDatabaseActions,
+        CommonSqlDatabaseCRUD<String, Integer, Integer, Integer> {
 
     private Connection connection;
     private String url;
@@ -143,4 +144,5 @@ public class MyPostgreWrapper implements CommonDatabaseActions, CommonSqlDatabas
         }
         return 0;
     }
+
 }

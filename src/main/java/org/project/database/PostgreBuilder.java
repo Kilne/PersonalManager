@@ -50,6 +50,11 @@ public class PostgreBuilder implements UriBuilderInterface<MyPostgreWrapper> {
         }
     }
 
+    /**
+     * Builds the database wrapper.
+     *
+     * @return The database wrapper.
+     */
     @Override
     public MyPostgreWrapper build() {
         if (this.postgreWrapper == null) {

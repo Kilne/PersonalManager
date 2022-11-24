@@ -1,9 +1,9 @@
 /target/
 /.idea/**
-/Relazioni e slides/Relazione/out/article_4.aux
-/Relazioni e slides/Relazione/out/article_4.lof
-/Relazioni e slides/Relazione/out/article_4.log
-/Relazioni e slides/Relazione/out/article_4.lot
-/Relazioni e slides/Relazione/out/article_4.out
-/Relazioni e slides/Relazione/out/article_4.synctex.gz
-/Relazioni e slides/Relazione/out/article_4.toc
+/Relazioni e slides/Relazione/out/*.aux
+/Relazioni e slides/Relazione/out/*.lof
+/Relazioni e slides/Relazione/out/*.log
+/Relazioni e slides/Relazione/out/*.lot
+/Relazioni e slides/Relazione/out/*.out
+/Relazioni e slides/Relazione/out/*.gz
+/Relazioni e slides/Relazione/out/*.toc
