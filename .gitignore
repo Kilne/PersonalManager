@@ -7,3 +7,4 @@
 /Relazioni e slides/Relazione/out/*.out
 /Relazioni e slides/Relazione/out/*.gz
 /Relazioni e slides/Relazione/out/*.toc
+*.env
