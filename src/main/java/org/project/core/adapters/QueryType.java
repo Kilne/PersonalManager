@@ -1,7 +1,7 @@
-package org.project.core;
+package org.project.core.adapters;
 
 /**
- * QueryType.
+ * QueryType enum.
  *
  * @author Luca Maiuri
  */

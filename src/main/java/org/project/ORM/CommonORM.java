@@ -7,5 +7,5 @@ package org.project.ORM;
  */
 @SuppressWarnings("unused")
 public interface CommonORM {
-    void parse(Object... objects);
+     String describeColumns();
 }

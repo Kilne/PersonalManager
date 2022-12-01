@@ -26,6 +26,22 @@ public class MyPostgreWrapper implements CommonDatabaseActions,
         this.url = url;
     }
 
+    public String getUrl() {
+        return this.url;
+    }
+
+    public boolean isConnected() {
+        if (this.connection == null) {
+            return false;
+        }
+        try {
+            return !this.connection.isClosed();
+        } catch (SQLException e) {
+            System.err.println(e.getErrorCode() + ": " + e.getMessage());
+            return false;
+        }
+    }
+
     @Override
     public void connect() {
         try {
@@ -47,16 +63,11 @@ public class MyPostgreWrapper implements CommonDatabaseActions,
         }
     }
 
-    private boolean isConnected() {
-        return this.connection != null;
-    }
-
-
     /**
      * Selects all the rows of a table.
      *
      * @param query The query to execute in a string format.
-     * @return A string containing all the rows of the table with the format: "row1;row2;row3;...;rowN".
+     * @return A string  containing all the rows of the table in a string format.
      */
     @Override
     public String select(String query) {
@@ -64,26 +75,21 @@ public class MyPostgreWrapper implements CommonDatabaseActions,
             try {
                 ResultSet resultSet = this.connection.createStatement().executeQuery(query);
                 ArrayList<String> result = new ArrayList<>();
+                StringBuilder stringBuilder = new StringBuilder();
                 while (resultSet.next()) {
+
                     for (int i = 0; i < resultSet.getMetaData().getColumnCount(); i++) {
-                        if (i == resultSet.getMetaData().getColumnCount() - 1) {
-                            result.add(
-                                    resultSet.getMetaData().getColumnName(i + 1) + ": " +
-                                            resultSet.getString(i + 1) + ";"
-                            );
-                        } else {
-                            result.add(
-                                    resultSet.getMetaData().getColumnName(i + 1) + ": " +
-                                            resultSet.getString(i + 1)
-                            );
-                        }
+
+                        stringBuilder.append(resultSet.getMetaData().getColumnName(i + 1))
+                                .append(":")
+                                .append(resultSet.getString(i + 1))
+                                .append(" ");
                     }
+                    result.add(stringBuilder.toString());
+                    stringBuilder.setLength(0);
                 }
                 resultSet.close();
-                return result.toString()
-                        .replaceAll("\\[", "")
-                        .replaceAll("]", "")
-                        .replaceAll(",", "");
+                return result.toString().replaceAll("[\\[\\]]", "");
             } catch (SQLException e) {
                 System.err.println("Select failed.");
             }

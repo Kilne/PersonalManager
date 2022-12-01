@@ -1,0 +1,18 @@
+CREATE TABLE public."Test"
+(
+    "ID" serial,
+    "NAME" character varying,
+    "DUEDATE" date,
+    "TARGET" double precision,
+    "DESCRIPTION" character varying,
+    "PROGRESS" double precision,
+    "STEPSNUMBER" bigint,
+    "STEPSCOMPLETED" bigint,
+    "STEPSVALUE" double precision,
+    PRIMARY KEY ("ID")
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public."Test"
+    OWNER to postgres;

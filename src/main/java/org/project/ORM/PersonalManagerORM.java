@@ -18,8 +18,6 @@ public class PersonalManagerORM implements CommonORM {
     private Float p_progress;
     private Float p_target;
     private Integer p_steps_number;
-
-
     private Integer p_steps_completed;
     private Float p_steps_value;
 
@@ -34,76 +32,8 @@ public class PersonalManagerORM implements CommonORM {
         this.p_steps_value = null;
     }
 
-    /**
-     * Parse a query result string from a PostgreSQL database wrapper class and return a Project object.
-     * <p></p>
-     * <p> The string must be in the form of: "ColumnName=Value ; " for each column in the table. </p>
-     * <p></p>
-     * <p>If the string is not in the correct format, the method will default the value of the object to a default value.</p>
-     * <p></p>
-     * <p> The types of the values are determined by the column type in the database, so they are assumed Type-Safe. </p>
-     *
-     * @param objects The query result string.
-     */
-    @Override
-    public void parse(Object... objects) {
-        /* inital varargs checks , default the object in case of failure */
-        if (objects.length != 1 && !(objects[0] instanceof String)) {
-            defaultTheObject();
-        } else {
-            /* parse the string, split each column provided */
-            String s = (String) objects[0];
-            String[] split = s.split(";");
-
-            /*checks if an ID is present if not default the object */
-            boolean idPresent = false;
-            for (String s1 : split) {
-                if (s1.toLowerCase().contains("id")) {
-                    idPresent = true;
-                    break;
-                }
-            }
-
-            /* If ID column is present proceeds to iterate over the string for values, else it defaults the object */
-            if (idPresent) {
-                for (String s1 : split) {
-                    switch (s1.split("=")[0].toLowerCase()) {
-                        case "id" -> this.p_id = s1.split("=")[1];
-                        case "name" -> setP_name(s1.split("=")[1]);
-                        case "description" -> setP_description(s1.split("=")[1]);
-                        case "duedate" -> setP_dueDate(LocalDateTime.parse(s1.split("=")[1]));
-                        case "progress" -> setP_progress(Float.parseFloat(s1.split("=")[1]));
-                        case "target" -> setP_target(Float.parseFloat(s1.split("=")[1]));
-                        case "stepsnumber" -> setP_steps_number(Integer.parseInt(s1.split("=")[1]));
-                        case "stepscompleted" -> setP_steps_completed(Integer.parseInt(s1.split("=")[1]));
-                        case "stepsvalue" -> setP_steps_value(Float.parseFloat(s1.split("=")[1]));
-                        default -> {
-                        }
-                    }
-                }
-                /* fill in the missing values using reflection*/
-                for (Field field : this.getClass().getDeclaredFields()) {
-                    try {
-                        if (field.get(this) == null) {
-                            switch (field.getName().toLowerCase()) {
-                                case "p_name" -> setP_name("");
-                                case "p_description" -> setP_description("");
-                                case "p_duedate" -> setP_dueDate(LocalDateTime.now());
-                                case "p_progress" -> setP_progress(0f);
-                                case "p_target" -> setP_target(0f);
-                                case "p_steps_number" -> setP_steps_number(-1);
-                                case "p_steps_completed" -> setP_steps_completed(-1);
-                                case "p_steps_value" -> setP_steps_value(-1f);
-                            }
-                        }
-                    } catch (IllegalAccessException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-            } else {
-                defaultTheObject();
-            }
-        }
+    public void setP_id(String p_id) {
+        this.p_id = p_id;
     }
 
     public String getP_id() {
@@ -161,7 +91,7 @@ public class PersonalManagerORM implements CommonORM {
      * @param p_dueDate The due date of the project.
      */
     public void setP_dueDate(LocalDateTime p_dueDate) {
-        if (p_dueDate.compareTo(LocalDateTime.now()) > 0) {
+        if (p_dueDate.isAfter(LocalDateTime.now())) {
             this.p_dueDate = p_dueDate;
         } else {
             if (this.p_dueDate == null) {
@@ -285,33 +215,35 @@ public class PersonalManagerORM implements CommonORM {
         }
     }
 
-    /**
-     * Defaults the object to a default state.
-     */
-    private void defaultTheObject() {
-        this.p_id = "";
-        this.p_name = "";
-        this.p_description = "";
-        this.p_dueDate = LocalDateTime.now();
-        this.p_progress = 0f;
-        this.p_target = 0f;
-        this.p_steps_number = 0;
-        this.p_steps_completed = 0;
-        this.p_steps_value = 0f;
-    }
-
     @Override
     public String toString() {
-        return "Project{" +
-                "\n p_id='" + p_id + '\'' +
-                ",\n p_name='" + p_name + '\'' +
-                ",\n p_description='" + p_description + '\'' +
-                ",\n p_dueDate=" + p_dueDate +
-                ",\n p_progress=" + p_progress +
-                ",\n p_target=" + p_target +
-                ",\n p_steps_number=" + p_steps_number +
-                ",\n p_steps_completed=" + p_steps_completed +
-                ",\n p_steps_value=" + p_steps_value +
-                "\n}";
+        return "ID:" + this.getP_id() + " " +
+                "Name:" + this.getP_name() + " " +
+                "Description:" + this.getP_description() + " " +
+                "DueDate:" + this.getP_dueDate() + " " +
+                "Progress:" + this.getP_progress() + " " +
+                "Target:" + this.getP_target() + " " +
+                "StepsNumber:" + this.getP_steps_number() + " " +
+                "StepsCompleted:" + this.getP_steps_completed() + " " +
+                "StepsValue:" + this.getP_steps_value();
+    }
+
+    /**
+     * Describes the columns of the table for the ORM class.
+     *
+     * @return The columns of the table.
+     */
+    @Override
+    public String describeColumns() {
+        StringBuilder sb = new StringBuilder();
+        for (Field field : this.getClass().getDeclaredFields()) {
+            sb.append(
+                    field.getName()
+                            .substring(2)
+                            .replaceAll("_", "")
+                            .toUpperCase()
+            ).append(":").append(field.getType().getSimpleName()).append(" ");
+        }
+        return sb.toString();
     }
 }

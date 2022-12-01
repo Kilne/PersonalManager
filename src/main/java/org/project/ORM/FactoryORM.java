@@ -17,8 +17,16 @@ public class FactoryORM {
         return this.orm;
     }
 
-    public void buildORM(String ormName) {
-        if ("personalmanagerorm".equalsIgnoreCase(ormName)) {
+    /**
+     * Build a specific ORM class.
+     * <p></p>
+     * The ORM class is built according to the type passed as parameter.
+     *
+     * @param ormName The name of the ORM class to build.
+     * @see ORMtypes
+     */
+    public void buildORM(ORMtypes ormName) {
+        if (ormName == ORMtypes.PERSONALMANAGERORM) {
             this.orm = new PersonalManagerORM();
         } else {
             this.orm = null;
