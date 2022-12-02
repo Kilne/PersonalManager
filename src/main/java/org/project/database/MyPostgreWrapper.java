@@ -64,7 +64,8 @@ public class MyPostgreWrapper implements CommonDatabaseActions,
     }
 
     /**
-     * Selects all the rows of a table.
+     * Selects all the rows of a table and packs them into a single string
+     * obtained from an <code>ArrayList</code> of <code>String</code>.
      *
      * @param query The query to execute in a string format.
      * @return A string  containing all the rows of the table in a string format.

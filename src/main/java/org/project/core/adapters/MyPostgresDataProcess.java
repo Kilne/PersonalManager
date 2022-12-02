@@ -7,6 +7,12 @@ import org.project.ORM.PersonalManagerORM;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 
+/**
+ * Adapater for the ORM class Project and the database.
+ * This class is used to convert the data from the database to the ORM class and vice versa.
+ *
+ * @author Luca Maiuri
+ */
 public class MyPostgresDataProcess implements AdapterDataDB<PersonalManagerORM> {
     private final FactoryORM factoryORM;
     private String data;
@@ -38,7 +44,9 @@ public class MyPostgresDataProcess implements AdapterDataDB<PersonalManagerORM> 
                 case "id" -> personalManagerORM.setP_id(splittedToken[1]);
                 case "name" -> personalManagerORM.setP_name(splittedToken[1]);
                 case "description" -> personalManagerORM.setP_description(splittedToken[1]);
-                case "duedate" -> personalManagerORM.setP_dueDate(LocalDateTime.parse(splittedToken[1] + "T00:00:00"));
+                case "duedate" -> personalManagerORM.setP_dueDate(
+                        LocalDateTime.parse(splittedToken[1].split("T")[0] + "T00:00:00")
+                );
                 case "progress" -> personalManagerORM.setP_progress(Float.parseFloat(splittedToken[1]));
                 case "target" -> personalManagerORM.setP_target(Float.parseFloat(splittedToken[1]));
                 case "stepsnumber" -> personalManagerORM.setP_steps_number(Integer.parseInt(splittedToken[1]));

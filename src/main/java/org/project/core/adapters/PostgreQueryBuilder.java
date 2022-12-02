@@ -22,9 +22,6 @@ public class PostgreQueryBuilder {
     private QueryType type;
     private String table;
 
-    public PostgreQueryBuilder() {
-    }
-
     /**
      * Parses the args string for the query.
      *
