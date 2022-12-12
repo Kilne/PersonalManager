@@ -2,57 +2,86 @@ package org.project.gui;
 
 import javafx.application.Application;
 import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import org.project.core.Coordinator;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Objects;
 
+/**
+ * Main Gui window of the application
+ *
+ * @author luca maiuri
+ */
 public class MainWindow extends Application implements Runnable {
 
-    private final Vector<Node> WindowElements = new Vector<>();
     private Stage window;
-    private final Boolean loggedIn = false;
-    private final Vector<Node> currentElements = new Vector<>();
+    private static Coordinator coordinator;
+    private final HashMap<String, Scene> elements = new HashMap<>();
 
-    public MainWindow() {
-        this.window = new Stage();
-        this.WindowElements.add(new LoginElements().loginElements());
-        this.WindowElements.add(new RegisterElements().getRegisterGrid());
+    public static Coordinator getCoordinator() {
+        return coordinator;
     }
 
-    public static void main(String[] args) {
-        launch(args);
+    public static void setCoordinator(Coordinator coordinator) {
+        MainWindow.coordinator = coordinator;
+    }
+
+    /**
+     * Main window of the application elements
+     */
+    private void loadElements() {
+        this.elements.put("Login", new LoginElements(this).loginElements());
+        this.elements.put("Register", new RegisterElements(this).getRegisterGrid());
+        this.elements.put("User", new UserProjectList(this).init());
     }
 
     @Override
     public void start(Stage stage) {
-        window = stage;
-        window.setTitle("Personal Project Manager");
-        window.setScene(new javafx.scene.Scene((GridPane) this.WindowElements.get(0)));
-        syncElements();
-        window.setOnCloseRequest(e -> {
-            e.consume();
-            window.close();
-        });
-
-        System.out.println("Window started");
-        System.out.println(this.currentElements);
-
-        window.show();
-    }
-
-    private void changeScene(int index) {
-        window.setScene(new javafx.scene.Scene((GridPane) this.WindowElements.get(index)));
-    }
-
-    private void syncElements() {
-        this.currentElements.clear();
-        this.currentElements.addAll(this.window.getScene().getRoot().getChildrenUnmodifiable());
+        this.window = stage;
+        loadElements();
+        this.window.setTitle("Personal Manager");
+        this.window.setScene(this.elements.get("User"));
+        addCard();
+        this.window.show();
     }
 
     /**
-     * Runs this operation.
+     * Change the scene of the main window
+     *
+     * @param sceneName the name of the scene to change to.
      */
+    protected void changeScene(String sceneName) {
+        this.window.setScene(this.elements.get(sceneName));
+    }
+
+    protected void addCard() {
+        //TODO: Add card logic
+        for (Node node1 : this.window.getScene().getRoot().getChildrenUnmodifiable()) {
+            if (Objects.equals(node1.getId(), "scrollPane")) {
+                Node node = ((ScrollPane) node1).getContent();
+                if (Objects.equals(node.getId(), "userProjectList")) {
+                    GridPane gridPane = (GridPane) node;
+                    ArrayList<Node> nodes = new ArrayList<>(gridPane.getChildren());
+
+                    nodes.add(new ProjectCard(this).assembleCard());
+                    nodes.add(new ProjectCard(this).assembleCard());
+                    nodes.add(new ProjectCard(this).assembleCard());
+                    nodes.add(new ProjectCard(this).assembleCard());
+                    gridPane.getChildren().clear();
+                    for (int i = 0; i < nodes.size(); i++) {
+                        gridPane.addRow(i, nodes.get(i));
+                    }
+                }
+            }
+        }
+    }
+
+
     @Override
     public void run() {
         launch();

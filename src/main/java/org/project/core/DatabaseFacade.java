@@ -105,6 +105,15 @@ public class DatabaseFacade {
     }
 
     /**
+     * Check if the database is connected.
+     *
+     * @return True if the database is connected, false otherwise.
+     */
+    public boolean isConnected() {
+        return this.database.isConnected();
+    }
+
+    /**
      * Syncs the user data from the database.
      *
      * @param table Table name.

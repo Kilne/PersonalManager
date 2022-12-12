@@ -26,10 +26,20 @@ public class MyPostgreWrapper implements CommonDatabaseActions,
         this.url = url;
     }
 
+    /**
+     * Get url of the database.
+     *
+     * @return Url of the database.
+     */
     public String getUrl() {
         return this.url;
     }
 
+    /**
+     * Check if the connection is established.
+     *
+     * @return True if the connection is established, false otherwise.
+     */
     public boolean isConnected() {
         if (this.connection == null) {
             return false;
@@ -42,6 +52,9 @@ public class MyPostgreWrapper implements CommonDatabaseActions,
         }
     }
 
+    /**
+     * Connect to the database.
+     */
     @Override
     public void connect() {
         try {
@@ -52,6 +65,9 @@ public class MyPostgreWrapper implements CommonDatabaseActions,
 
     }
 
+    /**
+     * Disconnect from the database.
+     */
     @Override
     public void disconnect() {
         if (this.connection != null) {
