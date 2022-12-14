@@ -2,6 +2,7 @@ package org.project.ORM;
 
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 /**
  * Project ORM class.
@@ -146,9 +147,11 @@ public class PersonalManagerORM implements CommonORM {
 
     /**
      * Set the parameters of the ORM class Project Steps Number.
+     * <p></p>
      * If the steps number is negative, the parameter will be set in two ways:
+     * <p></p>
      * 1) If the steps number is null, the parameter will be calculated from the target and the Due Date,
-     * if they are not null, otherwise it will be set to a default value of 100.
+     * if they are not null, otherwise it will be set to a default value of 100.<br>
      * 2) If the steps number is not null, the parameter will be set to the current steps number.
      *
      * @param p_steps_number The steps number of the project.
@@ -159,7 +162,7 @@ public class PersonalManagerORM implements CommonORM {
         } else {
             if (this.p_steps_number == null) {
                 if (this.p_target != null && this.p_dueDate != null) {
-                    this.p_steps_number = (int) (this.p_target / (this.p_dueDate.getDayOfYear() - LocalDateTime.now().getDayOfYear()));
+                    this.p_steps_number = Math.toIntExact(LocalDateTime.now().until(this.p_dueDate, ChronoUnit.DAYS));
                 } else {
                     this.p_steps_number = 100;
                 }
@@ -173,8 +176,9 @@ public class PersonalManagerORM implements CommonORM {
 
     /**
      * Set the parameters of the ORM class Project Steps Completed.
+     * <p></p>
      * If the steps completed is negative or greater than the steps number,
-     * , the parameter will be set to a default value of 0 or the current steps completed.
+     * the parameter will be set to a default value of 0 or the current steps completed.
      *
      * @param p_steps_completed The steps completed of the project.
      */
@@ -194,8 +198,10 @@ public class PersonalManagerORM implements CommonORM {
 
     /**
      * Set the parameters of the ORM class Project Steps Value.
+     * <p></p>
      * If the steps value is negative, the parameter will be set in two ways:
-     * 1) If the steps number is not null then it will be kept as is.
+     * <p></p>
+     * 1) If the steps number is not null then it will be kept as is.<br>
      * 2) If the steps number is null then it will be calculated from the current project target and Due Date, if they are not null,
      * otherwise it will be set to a default value of 1.
      *

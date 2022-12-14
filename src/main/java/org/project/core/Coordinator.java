@@ -44,5 +44,9 @@ public class Coordinator {
         return this.userProjects.get(projectID);
     }
 
+    public HashMap<String, PersonalManagerORM> getUserProjects() {
+        return this.userProjects;
+    }
+
 
 }

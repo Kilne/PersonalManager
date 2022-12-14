@@ -14,15 +14,7 @@ import javafx.scene.layout.GridPane;
  */
 public class LoginElements {
 
-    private Label title;
-    private Button loginButton;
-    private Button registerButton;
-    private Label loginLabel;
-    private Label passwordLabel;
-    private TextField loginField;
-    private PasswordField passwordField;
     private final MainWindow mainWindow;
-    private GridPane loginGrid;
 
     public LoginElements(MainWindow mainWindow) {
         this.mainWindow = mainWindow;
@@ -36,38 +28,38 @@ public class LoginElements {
     public Scene loginElements() {
 
         //INITIALIZE ELEMENTS
-        this.title = new Label("Login with your credentials");
-        this.loginButton = new Button("Login");
-        this.registerButton = new Button("Register");
-        this.loginLabel = new Label("Username");
-        this.passwordLabel = new Label("Password");
-        this.loginField = new TextField();
-        this.passwordField = new PasswordField();
-        this.loginGrid = new GridPane();
+        Label title = new Label("Login with your credentials");
+        Button loginButton = new Button("Login");
+        Button registerButton = new Button("Register");
+        Label loginLabel = new Label("Username");
+        Label passwordLabel = new Label("Password");
+        TextField loginField = new TextField();
+        PasswordField passwordField = new PasswordField();
+        GridPane loginGrid = new GridPane();
 
         //EVENTS
-        this.loginField.setId("loginField");
-        this.passwordField.setId("passwordField");
-        this.loginButton.addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, e -> {
+        loginField.setId("loginField");
+        passwordField.setId("passwordField");
+        loginButton.setOnAction(e -> {
             //TODO: Add login logic
         });
-        this.registerButton.addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, e -> mainWindow
+        registerButton.setOnAction(e -> mainWindow
                 .changeScene("Register"));
 
         //SET ELEMENTS
-        this.loginGrid.setAlignment(javafx.geometry.Pos.CENTER);
-        this.loginGrid.setHgap(10);
-        this.loginGrid.setVgap(10);
-        this.loginGrid.setPadding(new javafx.geometry.Insets(25, 25, 25, 25));
-        this.loginGrid.add(this.title, 0, 0, 2, 1);
-        this.loginGrid.add(this.loginLabel, 0, 1);
-        this.loginGrid.add(this.loginField, 1, 1);
-        this.loginGrid.add(this.passwordLabel, 0, 2);
-        this.loginGrid.add(this.passwordField, 1, 2);
-        this.loginGrid.add(this.loginButton, 0, 3);
-        this.loginGrid.add(this.registerButton, 1, 3);
+        loginGrid.setAlignment(javafx.geometry.Pos.CENTER);
+        loginGrid.setHgap(10);
+        loginGrid.setVgap(10);
+        loginGrid.setPadding(new javafx.geometry.Insets(25, 25, 25, 25));
+        loginGrid.add(title, 0, 0, 2, 1);
+        loginGrid.add(loginLabel, 0, 1);
+        loginGrid.add(loginField, 1, 1);
+        loginGrid.add(passwordLabel, 0, 2);
+        loginGrid.add(passwordField, 1, 2);
+        loginGrid.add(loginButton, 0, 3);
+        loginGrid.add(registerButton, 1, 3);
 
-        return new Scene(this.loginGrid, 300, 275);
+        return new Scene(loginGrid, 300, 275);
     }
 
 

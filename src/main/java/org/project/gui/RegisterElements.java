@@ -13,16 +13,7 @@ import javafx.scene.layout.GridPane;
  */
 public class RegisterElements {
 
-    private Label title;
-    private Button registerButton;
-    private Button CancelButton;
-    private Label loginLabel;
-    private Label passwordLabel;
     private final MainWindow mainWindow;
-    private TextField loginField;
-    private TextField passwordField;
-
-    private GridPane registerGrid;
 
     public RegisterElements(MainWindow mainWindow) {
         this.mainWindow = mainWindow;
@@ -34,37 +25,37 @@ public class RegisterElements {
      */
     public Scene getRegisterGrid() {
         //INITIALIZE ELEMENTS
-        this.title = new Label("Register with your credentials");
-        this.registerButton = new Button("Register");
-        this.CancelButton = new Button("Cancel");
-        this.loginLabel = new Label("Username");
-        this.passwordLabel = new Label("Password");
-        this.loginField = new TextField();
-        this.passwordField = new TextField();
-        this.registerGrid = new GridPane();
+        Label title = new Label("Register with your credentials");
+        Button registerButton = new Button("Register");
+        Button cancelButton = new Button("Cancel");
+        Label loginLabel = new Label("Username");
+        Label passwordLabel = new Label("Password");
+        TextField loginField = new TextField();
+        TextField passwordField = new TextField();
+        GridPane registerGrid = new GridPane();
 
         // SET ELEMENTS
-        this.loginField.setId("loginField");
-        this.passwordField.setId("passwordField");
-        this.registerButton.addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, e -> {
+        loginField.setId("loginField");
+        passwordField.setId("passwordField");
+        registerButton.setOnAction(e -> {
             //TODO: Add register logic
         });
-        this.CancelButton.addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, e -> mainWindow
+        cancelButton.setOnAction(e -> mainWindow
                 .changeScene("Login"));
 
         // GRID
-        this.registerGrid.setAlignment(javafx.geometry.Pos.CENTER);
-        this.registerGrid.setHgap(10);
-        this.registerGrid.setVgap(10);
-        this.registerGrid.setPadding(new javafx.geometry.Insets(25, 25, 25, 25));
-        this.registerGrid.add(this.title, 0, 0, 2, 1);
-        this.registerGrid.add(this.loginLabel, 0, 1);
-        this.registerGrid.add(this.loginField, 1, 1);
-        this.registerGrid.add(this.passwordLabel, 0, 2);
-        this.registerGrid.add(this.passwordField, 1, 2);
-        this.registerGrid.add(this.registerButton, 0, 3);
-        this.registerGrid.add(this.CancelButton, 1, 3);
+        registerGrid.setAlignment(javafx.geometry.Pos.CENTER);
+        registerGrid.setHgap(10);
+        registerGrid.setVgap(10);
+        registerGrid.setPadding(new javafx.geometry.Insets(25, 25, 25, 25));
+        registerGrid.add(title, 0, 0, 2, 1);
+        registerGrid.add(loginLabel, 0, 1);
+        registerGrid.add(loginField, 1, 1);
+        registerGrid.add(passwordLabel, 0, 2);
+        registerGrid.add(passwordField, 1, 2);
+        registerGrid.add(registerButton, 0, 3);
+        registerGrid.add(cancelButton, 1, 3);
 
-        return new Scene(this.registerGrid, 300, 275);
+        return new Scene(registerGrid, 300, 275);
     }
 }

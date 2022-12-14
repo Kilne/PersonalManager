@@ -93,15 +93,19 @@ public class DatabaseFacade {
     /**
      * Connects to the database.
      */
-    public void connect() {
+    public boolean connect() {
+
         this.database.connect();
+        return this.database.isConnected();
     }
 
     /**
      * Disconnects from the database.
      */
-    public void disconnect() {
+    public boolean disconnect() {
+
         this.database.disconnect();
+        return !this.database.isConnected();
     }
 
     /**
@@ -109,7 +113,7 @@ public class DatabaseFacade {
      *
      * @return True if the database is connected, false otherwise.
      */
-    public boolean isConnected() {
+    private boolean isConnected() {
         return this.database.isConnected();
     }
 

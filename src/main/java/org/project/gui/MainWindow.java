@@ -1,16 +1,21 @@
 package org.project.gui;
 
 import javafx.application.Application;
+import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import org.project.ORM.PersonalManagerORM;
 import org.project.core.Coordinator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
+
 
 /**
  * Main Gui window of the application
@@ -46,7 +51,7 @@ public class MainWindow extends Application implements Runnable {
         loadElements();
         this.window.setTitle("Personal Manager");
         this.window.setScene(this.elements.get("User"));
-        addCard();
+        populateProjects();
         this.window.show();
     }
 
@@ -59,25 +64,67 @@ public class MainWindow extends Application implements Runnable {
         this.window.setScene(this.elements.get(sceneName));
     }
 
-    protected void addCard() {
-        //TODO: Add card logic
-        for (Node node1 : this.window.getScene().getRoot().getChildrenUnmodifiable()) {
-            if (Objects.equals(node1.getId(), "scrollPane")) {
-                Node node = ((ScrollPane) node1).getContent();
-                if (Objects.equals(node.getId(), "userProjectList")) {
-                    GridPane gridPane = (GridPane) node;
-                    ArrayList<Node> nodes = new ArrayList<>(gridPane.getChildren());
-
-                    nodes.add(new ProjectCard(this).assembleCard());
-                    nodes.add(new ProjectCard(this).assembleCard());
-                    nodes.add(new ProjectCard(this).assembleCard());
-                    nodes.add(new ProjectCard(this).assembleCard());
-                    gridPane.getChildren().clear();
-                    for (int i = 0; i < nodes.size(); i++) {
-                        gridPane.addRow(i, nodes.get(i));
+    /**
+     * Populate the projects list, clears the list and then adds the new projects if any from the coordinator.
+     *
+     * @see Coordinator
+     */
+    protected void populateProjects() {
+        this.window.getScene().getRoot().getChildrenUnmodifiable().forEach(
+                elements -> {
+                    if (elements instanceof ScrollPane scrollPane) {
+                        ((GridPane) scrollPane.getContent()).getChildren().clear();
                     }
                 }
+        );
+
+        if (MainWindow.coordinator.getUserProjects().size() != 0) {
+            ObservableList<Node> nodes = this.window.getScene().getRoot().getChildrenUnmodifiable();
+            for (Node node : nodes) {
+                if (node instanceof ScrollPane scrollPane) {
+                    GridPane scrollPaneNodes = (GridPane) scrollPane.getContent();
+                    MainWindow.coordinator.getUserProjects().forEach((s, personalManagerORM) -> {
+                        scrollPaneNodes.add(new ProjectCard(this).assembleCard(),
+                                0, scrollPaneNodes.getChildren().size() + 1);
+                    });
+                    ArrayList<PersonalManagerORM> userProjects = new ArrayList<>(MainWindow.coordinator.getUserProjects().values());
+                    AtomicInteger i = new AtomicInteger();
+                    scrollPaneNodes.getChildren().forEach(cardNode -> {
+                        GridPane card = (GridPane) cardNode;
+                        card.getChildren().forEach(element -> {
+                            if (element.getId() != null) {
+                                switch (element.getId()) {
+                                    case "projectNameField" -> ((Label) element)
+                                            .setText(userProjects.get(i.get()).getP_name());
+                                    case "projectDescriptionField" -> ((Label) element)
+                                            .setText(userProjects.get(i.get()).getP_description());
+                                    case "projectDeadlineField" -> ((Label) element)
+                                            .setText(userProjects.get(i.get()).getP_dueDate().toString());
+                                    case "targetField" -> ((Label) element)
+                                            .setText(userProjects.get(i.get()).getP_target().toString());
+                                    case "stepsTotalField" -> ((Label) element)
+                                            .setText(userProjects.get(i.get()).getP_steps_number().toString());
+                                    case "stepsCompletedField" -> ((Label) element)
+                                            .setText(userProjects.get(i.get()).getP_steps_completed().toString());
+                                    case "progressField" -> ((ProgressBar) element)
+                                            .setProgress(userProjects.get(i.get()).getP_progress());
+                                    case "projectID" -> ((Label) element).setText(userProjects.get(i.get()).getP_id());
+                                }
+                            }
+                        });
+                        i.addAndGet(1);
+                    });
+                }
             }
+        } else {
+            this.window.getScene().getRoot().getChildrenUnmodifiable().forEach(
+                    elements -> {
+                        if (elements instanceof ScrollPane scrollPane) {
+                            GridPane scrollPaneNodes = (GridPane) scrollPane.getContent();
+                            scrollPaneNodes.add(new Label("No projects found"), 0, 0);
+                        }
+                    }
+            );
         }
     }
 

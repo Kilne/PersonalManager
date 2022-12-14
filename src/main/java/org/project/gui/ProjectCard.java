@@ -7,28 +7,6 @@ import javafx.scene.layout.GridPane;
 
 public class ProjectCard {
 
-    private GridPane projectCard;
-
-    private Label projectName;
-    private Label projectDescription;
-    private Label projectDeadline;
-    private Label target;
-    private Label progress;
-    private Label stepsTotal;
-    private Label stepsCompleted;
-    private Label projectID;
-
-    private Label projectNameField;
-    private Label projectDescriptionField;
-    private Label projectDeadlineField;
-    private Label targetField;
-    private ProgressBar progressField;
-    private Label stepsTotalField;
-    private Label stepsCompletedField;
-
-    private Button editButton;
-    private Button deleteButton;
-
     private final MainWindow mainWindow;
 
     public ProjectCard(MainWindow mainWindow) {
@@ -38,31 +16,32 @@ public class ProjectCard {
     public GridPane assembleCard() {
 
         //Grid
-        projectCard = new GridPane();
+        GridPane projectCard = new GridPane();
         projectCard.setHgap(10);
         projectCard.setVgap(10);
         projectCard.setAlignment(javafx.geometry.Pos.CENTER);
 
 
         //Elements and IDs
-        projectName = new Label("Project Name");
-        projectDescription = new Label("Project Description");
-        projectDeadline = new Label("Project Deadline");
-        target = new Label("Target");
-        progress = new Label("Progress");
-        stepsTotal = new Label("Steps Total");
-        stepsCompleted = new Label("Steps Completed");
-        projectID = new Label("Project ID");
+        Label projectName = new Label("Project Name");
+        Label projectDescription = new Label("Project Description");
+        Label projectDeadline = new Label("Project Deadline");
+        Label target = new Label("Target");
+        Label progress = new Label("Progress");
+        Label stepsTotal = new Label("Steps Total");
+        Label stepsCompleted = new Label("Steps Completed");
+        Label projectID = new Label("Project ID");
         projectCard.setId("projectCard");
         projectID.setVisible(false);
+        projectID.setId("projectID");
 
-        projectNameField = new Label("Project Name Field");
-        projectDescriptionField = new Label("Project Description Field");
-        projectDeadlineField = new Label("Project Deadline Field");
-        targetField = new Label("Target Field");
-        progressField = new ProgressBar(0);
-        stepsTotalField = new Label("Steps Total Field");
-        stepsCompletedField = new Label("Steps Completed Field");
+        Label projectNameField = new Label("Project Name Field");
+        Label projectDescriptionField = new Label("Project Description Field");
+        Label projectDeadlineField = new Label("Project Deadline Field");
+        Label targetField = new Label("Target Field");
+        ProgressBar progressField = new ProgressBar(0);
+        Label stepsTotalField = new Label("Steps Total Field");
+        Label stepsCompletedField = new Label("Steps Completed Field");
 
         projectNameField.setId("projectNameField");
         projectDescriptionField.setId("projectDescriptionField");
@@ -72,15 +51,21 @@ public class ProjectCard {
         stepsTotalField.setId("stepsTotalField");
         stepsCompletedField.setId("stepsCompletedField");
 
-        deleteButton = new Button("Delete");
+        // Buttons and events
+        Button deleteButton = new Button("Delete");
         deleteButton.setId("deleteButton");
-        deleteButton.addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, e -> {
-            //TODO: Add delete logic
+        deleteButton.setOnAction(e -> {
+            MainWindow.getCoordinator().removeProject(projectID.getText());
+            mainWindow.populateProjects();
         });
-        editButton = new Button("Edit");
+        Button editButton = new Button("Edit");
         editButton.setId("editButton");
-        editButton.addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, e -> {
-            //TODO: Add edit logic
+        editButton.setOnAction(e -> {
+            ProjectInterface projectInterface = new ProjectInterface();
+            projectInterface.setProjectInterfaceORM(MainWindow
+                    .getCoordinator().getProject(projectID.getText()));
+            projectInterface.display();
+            mainWindow.populateProjects();
         });
 
         //Add elements to grid

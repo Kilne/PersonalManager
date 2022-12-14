@@ -7,6 +7,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import org.project.ORM.PersonalManagerORM;
+import org.project.core.ProjectEditorLogic;
+
+import java.util.Vector;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Single project GUI interface
@@ -15,108 +19,120 @@ import org.project.ORM.PersonalManagerORM;
  */
 public class ProjectInterface {
 
-    private final Stage window = new Stage();
-    private Label title;
-    private GridPane projectGrid;
-    private Label projectName;
-    private Label projectDescription;
-    private Label projectDeadline;
-    private Label target;
-    private Label progress;
-    private Label stepsTotal;
-    private Label stepsCompleted;
-    private Label stepsValue;
-    private TextField projectNameField;
-    private TextField projectDescriptionField;
-    private TextField projectDeadlineField;
-    private TextField targetField;
-    private TextField progressField;
-    private TextField stepsTotalField;
-    private TextField stepsCompletedField;
-    private TextField stepsValueField;
-    private Button saveButton;
-    private Button cancelButton;
+    private final ProjectEditorLogic logic = new ProjectEditorLogic();
+    private Stage window;
+    private PersonalManagerORM orm;
 
-    public void setProjectInterface(PersonalManagerORM orm) {
-        this.projectNameField.setText(orm.getP_name());
-        this.projectDescriptionField.setText(orm.getP_description());
-        this.projectDeadlineField.setText(orm.getP_dueDate().toString());
-        this.targetField.setText(orm.getP_target().toString());
-        this.progressField.setText(orm.getP_progress().toString());
-        this.stepsTotalField.setText(orm.getP_steps_number().toString());
-        this.stepsCompletedField.setText(orm.getP_steps_completed().toString());
-        this.stepsValueField.setText(orm.getP_steps_value().toString());
+    public void setProjectInterfaceORM(PersonalManagerORM orm) {
+        this.orm = orm;
     }
 
-
+    /**
+     * Create the project interface stage and wait for user input
+     */
     public void display() {
+        this.window = new Stage();
         window.setTitle("Project Interface");
         window.setResizable(false);
         window.initModality(javafx.stage.Modality.APPLICATION_MODAL);
         window.setScene(projectInterface());
         window.showAndWait();
-
     }
 
-    public Scene projectInterface() {
+    /**
+     * Create the project interface scene
+     *
+     * @return the project interface scene and events
+     */
+    private Scene projectInterface() {
         // Initialize
-        this.title = new Label("Project Interface");
-        this.projectName = new Label("Project Name");
-        this.projectDescription = new Label("Project Description");
-        this.projectDeadline = new Label("Project Deadline");
-        this.target = new Label("Target");
-        this.progress = new Label("Progress");
-        this.stepsTotal = new Label("Steps Total");
-        this.stepsCompleted = new Label("Steps Completed");
-        this.stepsValue = new Label("Steps Value");
-        this.projectNameField = new TextField();
-        this.projectDescriptionField = new TextField();
-        this.projectDeadlineField = new TextField();
-        this.targetField = new TextField();
-        this.progressField = new TextField();
-        this.stepsTotalField = new TextField();
-        this.stepsCompletedField = new TextField();
-        this.stepsValueField = new TextField();
-        this.saveButton = new Button("Save");
-        this.cancelButton = new Button("Cancel");
-        this.projectGrid = new GridPane();
+        Label title = new Label("Project Interface");
+        Label projectName = new Label("Project Name");
+        Label projectDescription = new Label("Project Description");
+        Label projectDeadline = new Label("Project Deadline");
+        Label target = new Label("Target");
+        TextField projectNameField = new TextField();
+        TextField projectDescriptionField = new TextField();
+        TextField projectDeadlineField = new TextField();
+        TextField targetField = new TextField();
+        Label projectStepsTotal = new Label("Total Steps");
+        Label projectStepsCompleted = new Label("Completed Steps");
+        Label projectStepsTotalField = new Label(orm.getP_steps_number().toString());
+        Label projectStepsCompletedField = new Label(orm.getP_steps_completed().toString());
+        Button saveButton = new Button("Save");
+        Button cancelButton = new Button("Cancel");
+        Button addStepButton = new Button("Add Step");
+        Button removeStepButton = new Button("Remove Step");
+        GridPane projectGrid = new GridPane();
 
 
-        // SET ELEMENTS
-        this.saveButton.addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, e -> {
-            //TODO: Add save logic with business logic
+        // SET ELEMENTS AND EVENTS
+        saveButton.setOnAction(e -> {
+
+            Vector<Boolean> tests = new Vector<>();
+            AtomicReference<Boolean> result = new AtomicReference<>(true);
+            tests.add(logic.changeName(projectNameField.getText()));
+            tests.add(logic.changeDescription(projectDescriptionField.getText()));
+            tests.add(logic.changeDueDate(projectDeadlineField.getText()));
+            tests.add(logic.changeTarget(targetField.getText()));
+            tests.forEach(test -> {
+                if (!test) {
+                    result.set(false);
+                }
+            });
+            if (result.get()) {
+                this.setProjectInterfaceORM(logic.getProject());
+                MainWindow.getCoordinator().removeProject(this.orm.getP_id());
+                MainWindow.getCoordinator().addProject(this.orm);
+                window.close();
+            }
         });
-        this.cancelButton.addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, e -> {
+        cancelButton.setOnAction(e -> {
             window.close();
         });
+        addStepButton.setOnAction(e -> {
+            this.logic.setProject(this.orm);
+            if (this.logic.addStepCompleted()) {
+                projectStepsCompletedField.setText(this.logic.getProject().getP_steps_completed().toString());
+                this.setProjectInterfaceORM(this.logic.getProject());
+            }
+        });
+        removeStepButton.setOnAction(e -> {
+            this.logic.setProject(this.orm);
+            if (this.logic.removeStepCompleted()) {
+                projectStepsCompletedField.setText(this.logic.getProject().getP_steps_completed().toString());
+                this.setProjectInterfaceORM(this.logic.getProject());
+            }
+        });
+        projectNameField.setText(orm.getP_name());
+        projectDescriptionField.setText(orm.getP_description());
+        projectDeadlineField.setText(orm.getP_dueDate().toString());
+        targetField.setText(orm.getP_target().toString());
 
         // SET GRID
-        this.projectGrid.setAlignment(javafx.geometry.Pos.CENTER);
-        this.projectGrid.setHgap(10);
-        this.projectGrid.setVgap(10);
-        this.projectGrid.setPadding(new javafx.geometry.Insets(25, 25, 25, 25));
-        this.projectGrid.add(this.title, 0, 0, 2, 1);
-        this.projectGrid.add(this.projectName, 0, 1);
-        this.projectGrid.add(this.projectNameField, 1, 1);
-        this.projectGrid.add(this.projectDescription, 0, 2);
-        this.projectGrid.add(this.projectDescriptionField, 1, 2);
-        this.projectGrid.add(this.projectDeadline, 0, 3);
-        this.projectGrid.add(this.projectDeadlineField, 1, 3);
-        this.projectGrid.add(this.target, 0, 4);
-        this.projectGrid.add(this.targetField, 1, 4);
-        this.projectGrid.add(this.progress, 0, 5);
-        this.projectGrid.add(this.progressField, 1, 5);
-        this.projectGrid.add(this.stepsTotal, 0, 6);
-        this.projectGrid.add(this.stepsTotalField, 1, 6);
-        this.projectGrid.add(this.stepsCompleted, 0, 7);
-        this.projectGrid.add(this.stepsCompletedField, 1, 7);
-        this.projectGrid.add(this.stepsValue, 0, 8);
-        this.projectGrid.add(this.stepsValueField, 1, 8);
-        this.projectGrid.add(this.saveButton, 0, 9);
-        this.projectGrid.add(this.cancelButton, 1, 9);
+        projectGrid.setAlignment(javafx.geometry.Pos.CENTER);
+        projectGrid.setHgap(10);
+        projectGrid.setVgap(10);
+        projectGrid.setPadding(new javafx.geometry.Insets(25, 25, 25, 25));
+        projectGrid.add(title, 0, 0, 2, 1);
+        projectGrid.add(projectName, 0, 1);
+        projectGrid.add(projectNameField, 1, 1);
+        projectGrid.add(projectDescription, 0, 2);
+        projectGrid.add(projectDescriptionField, 1, 2);
+        projectGrid.add(projectDeadline, 0, 3);
+        projectGrid.add(projectDeadlineField, 1, 3);
+        projectGrid.add(target, 0, 4);
+        projectGrid.add(targetField, 1, 4);
+        projectGrid.add(projectStepsTotal, 0, 5);
+        projectGrid.add(projectStepsTotalField, 1, 5);
+        projectGrid.add(projectStepsCompleted, 0, 6);
+        projectGrid.add(projectStepsCompletedField, 1, 6);
+        projectGrid.add(saveButton, 0, 7);
+        projectGrid.add(cancelButton, 1, 7);
+        projectGrid.add(addStepButton, 0, 8);
+        projectGrid.add(removeStepButton, 1, 8);
 
-
-        return new Scene(this.projectGrid, 400, 400);
+        return new Scene(projectGrid, 400, 400);
     }
 
 }

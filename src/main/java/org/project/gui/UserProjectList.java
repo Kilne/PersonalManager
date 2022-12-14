@@ -11,14 +11,7 @@ import javafx.scene.layout.VBox;
 
 public class UserProjectList {
 
-    private Label userName;
-    private Label loggedAs;
-    private Button createProject;
-    private Button logout;
     private VBox vbox;
-    private GridPane grid;
-    private ScrollPane scrollPane;
-    private BorderPane borderPane;
 
     private final MainWindow mainWindow;
 
@@ -26,9 +19,14 @@ public class UserProjectList {
         this.mainWindow = mainWindow;
     }
 
+    /**
+     * Create the user project list scene
+     *
+     * @return the user project list scene
+     */
     public Scene init() {
         // GridPane init
-        this.grid = new GridPane();
+        GridPane grid = new GridPane();
         grid.setAlignment(Pos.TOP_LEFT);
         grid.setHgap(10);
         grid.setVgap(10);
@@ -55,7 +53,7 @@ public class UserProjectList {
         //Init elements and events
         this.initStaticElements();
 
-        this.scrollPane = new ScrollPane();
+        ScrollPane scrollPane = new ScrollPane();
         scrollPane.setContent(grid);
         scrollPane.setFitToWidth(true);
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
@@ -63,39 +61,43 @@ public class UserProjectList {
         scrollPane.setId("scrollPane");
 
         //BorderPane init
-        this.borderPane = new BorderPane();
+        BorderPane borderPane = new BorderPane();
         borderPane.setId("generalWindow");
         borderPane.setCenter(scrollPane);
         borderPane.setLeft(vbox);
 
-        return new Scene(borderPane, 700, 400);
+        return new Scene(borderPane, 900, 400);
     }
 
+    /**
+     * Initialize static elements of the scene and events
+     */
     private void initStaticElements() {
         //User section and CSS
-        this.loggedAs = new Label("Logged as:");
-        this.userName = new Label("UserPlaceholder");
-        this.userName.setId("userName");
-        this.loggedAs.setStyle("-fx-font-weight: bold; -fx-font-size: 15px; -fx-text-fill: #ffffff;");
-        this.userName.setStyle("-fx-font-weight: bold; -fx-font-size: 15px; -fx-text-fill: #ffffff;");
+        Label loggedAs = new Label("Logged as:");
+        Label userName = new Label("UserPlaceholder");
+        userName.setId("userName");
+        loggedAs.setStyle("-fx-font-weight: bold; -fx-font-size: 15px; -fx-text-fill: #ffffff;");
+        userName.setStyle("-fx-font-weight: bold; -fx-font-size: 15px; -fx-text-fill: #ffffff;");
 
         //Buttons
-        this.createProject = new Button("Create Project");
-        this.logout = new Button("Logout");
+        Button createProject = new Button("Create Project");
+        Button logout = new Button("Logout");
 
         //Events for buttons
-        this.logout.addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, e -> mainWindow
-                .changeScene("Login"));
-        this.createProject.addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, e -> {
-            //TODO: Add create project logic
+        logout.setOnAction(e -> mainWindow.changeScene("Login"));
+        createProject.setOnAction(e -> {
+            ProjectCreatorInterface projectCreatorInterface = new ProjectCreatorInterface(mainWindow);
+            projectCreatorInterface.display();
+            mainWindow.populateProjects();
         });
 
         //Add elements to VBox
         this.vbox.getChildren().addAll(
-                this.loggedAs,
-                this.userName,
-                this.createProject,
-                this.logout);
+                loggedAs,
+                userName,
+                createProject,
+                logout);
     }
 
 }
