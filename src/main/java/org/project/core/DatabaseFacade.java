@@ -26,6 +26,14 @@ public class DatabaseFacade {
         this.postgreBuilder.reset();
     }
 
+    /**
+     * Sets the database coordinator.
+     * @param host The host.
+     * @param port The port.
+     * @param database The database.
+     * @param user The user.
+     * @param password The password.
+     */
     public DatabaseFacade(String host, int port, String database, String user, String password) {
         this.postgreBuilder.withHost(host);
         this.postgreBuilder.withPort(port);
@@ -195,5 +203,43 @@ public class DatabaseFacade {
             }
         }
         return this.sync(user);
+    }
+
+    /**
+     * Executes a query on the database for a specific user creating a new table if it doesn't exist.
+     * @param username Username table to execute the query.
+     * @param password Password table to execute the query.
+     * @return True if the table was created, false otherwise.
+     */
+    public boolean createUserInDatabase(String username, String password) {
+        String userCreation = "CREATE USER " + username + " WITH PASSWORD '" + password + "';";
+        String userPrivileges =
+                "GRANT CONNECT ON DATABASE " + this.database.getDatabaseName() + " TO " + username +
+                "GRANT USAGE ON SCHEMA "+ this.database.getDatabaseSchema() +" TO " + username + ";";
+        String createUserTable = "CREATE TABLE " +
+                this.database.getDatabaseSchema()+"."+username +
+                "(ID SERIAL PRIMARY KEY, " +
+                "NAME CHARACHTER VARYING, " +
+                "DUEDATE DATE, " +
+                "TARGET DOUBLE PRECISION, " +
+                "DESCRIPTION CHARACHTER VARYING, " +
+                "PROGRESS DOUBLE PRECISION, " +
+                "STEPSNUMBER BIGINT, " +
+                "STEPSCOMPLETED BIGINT, " +
+                "STEPSVALUE DOUBLE PRECISION) "+
+                "TABLESPACE pg_default "+
+                "ALTER TABLE IF EXISTS "+this.database.getDatabaseSchema()+"."+username+" OWNER TO "+username+
+                "GRANT ALL ON TABLE "+this.database.getDatabaseSchema()+"."+username+" TO "+username+";";
+        try{
+            /*if(this.database.executeDatabaseAction(userCreation)
+             && this.database.executeDatabaseAction(userPrivileges)
+             && this.database.executeDatabaseAction(createUserTable)){
+                return true;
+            }*/
+            return this.database.executeDatabaseAction(userCreation);
+        } catch (Exception e) {
+            return false;
+        }
+
     }
 }

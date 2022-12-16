@@ -5,15 +5,23 @@ import org.project.ORM.FactoryORM;
 import org.project.ORM.ORMtypes;
 import org.project.ORM.PersonalManagerORM;
 import org.project.core.Coordinator;
+import org.project.core.DatabaseFacade;
+import org.project.database.MyPostgreWrapper;
+import org.project.database.PostgreBuilder;
 import org.project.gui.MainWindow;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 
 public class Main {
 
     public static void main(String[] args) {
         Dotenv dotenv = Dotenv.configure().ignoreIfMissing().ignoreIfMalformed().load();
+        DatabaseFacade admin = new DatabaseFacade("localhost", 5432, "postgres", "postgres", "admin");
         Coordinator coordinator = new Coordinator();
+        coordinator.setMediatorInstance(admin);
+        System.out.println(coordinator.createUser("luca", "admin"));
+
         FactoryORM factoryORM = new FactoryORM();
         factoryORM.buildORM(ORMtypes.PERSONALMANAGERORM);
         PersonalManagerORM personalManagerORM = (PersonalManagerORM) factoryORM.getORM();

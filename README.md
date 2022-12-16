@@ -11,7 +11,6 @@ l'organizzazione di progetti personali di un utente.
 
 - Database POSTGRES
 - JavaFX
-- POSTGRES RLS
 
 ### Funzionalità
 

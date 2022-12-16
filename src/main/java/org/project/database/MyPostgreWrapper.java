@@ -1,9 +1,6 @@
 package org.project.database;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 
 /**
@@ -168,4 +165,65 @@ public class MyPostgreWrapper implements CommonDatabaseActions,
         return 0;
     }
 
+    /**
+     * Executes a query which is not a select, insert, update or delete.
+     *
+     * @param query The query to execute in a string format.
+     * @return True if the query is executed successfully, false otherwise.
+     */
+    public boolean executeDatabaseAction(String query) {
+        if (this.isConnected()) {
+            try {
+                return this.connection.createStatement().execute(query);
+            } catch (SQLException e) {
+                System.err.println("Action failed.");
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Gets the database name.
+     *
+     * @return The database name.Or an empty string if the connection is not established.
+     */
+    public String getDatabaseName() {
+        if (this.isConnected()) {
+            try {
+                ResultSet resultSet = this.connection.getMetaData().getCatalogs();
+                ArrayList<String> result = new ArrayList<>();
+                while (resultSet.next()) {
+                    result.add(resultSet.getString(1));
+                }
+                resultSet.close();
+                return result.toString().replaceAll("[\\[\\]]", "");
+            } catch (SQLException e) {
+                return "";
+            }
+        }
+        return "";
+    }
+
+    /**
+     * Get the schema of the database.
+     * @return The schema of the database. Or empty array if the connection is not established.
+     */
+    public String getDatabaseSchema() {
+        ArrayList<String> result = new ArrayList<>();
+        if (this.isConnected()) {
+            try {
+                ResultSet resultSet = this.connection.getMetaData().getSchemas();
+                while (resultSet.next()) {
+                    if (!resultSet.getString(1).equals("information_schema")
+                            && !resultSet.getString(1).equals("pg_catalog")) {
+                        result.add(resultSet.getString(1));
+                    }
+                }
+                resultSet.close();
+            } catch (SQLException e) {
+                return result.toString().replaceAll("[\\[\\]]", "");
+            }
+        }
+        return result.toString().replaceAll("[\\[\\]]", "");
+    }
 }

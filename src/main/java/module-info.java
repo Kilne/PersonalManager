@@ -5,4 +5,5 @@ module org.project {
     exports org.project.gui;
     exports org.project.ORM;
     exports org.project.core;
+    exports org.project.core.adapters;
 }

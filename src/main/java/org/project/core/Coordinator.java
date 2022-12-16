@@ -5,6 +5,13 @@ import org.project.gui.MainWindow;
 
 import java.util.HashMap;
 
+/**
+ * Coordinator class for the project elements.
+ * <br>
+ * This class is used to manage the project elements.
+ * <br>
+ * @author luca maiuri
+ */
 public class Coordinator {
 
     private final HashMap<String, PersonalManagerORM> userProjects;
@@ -46,6 +53,10 @@ public class Coordinator {
 
     public HashMap<String, PersonalManagerORM> getUserProjects() {
         return this.userProjects;
+    }
+
+    public boolean createUser(String username, String password) {
+        return this.mediatorInstance.createUserInDatabase(username, password);
     }
 
 

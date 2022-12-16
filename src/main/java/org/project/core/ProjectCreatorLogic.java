@@ -7,6 +7,11 @@ import org.project.ORM.PersonalManagerORM;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
+/**
+ * Project creator logic
+ *
+ * @author luca maiuri
+ */
 public class ProjectCreatorLogic {
 
     PersonalManagerORM project;
@@ -24,11 +29,11 @@ public class ProjectCreatorLogic {
     /**
      * This method is used to create and set the project's name and params
      *
-     * @param name
-     * @param des
-     * @param dueDate
-     * @param target
-     * @return
+     * @param name       the project's name
+     * @param des       the project's description
+     * @param dueDate   the project's deadline
+     * @param target   the project's target
+     * @return true if the project is created, false otherwise
      */
     public boolean createOne(String name, String des, String dueDate, String target) {
 
