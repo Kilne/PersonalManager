@@ -2,6 +2,8 @@ package org.project.database;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Vector;
 
 /**
  * Wrapper for PostgreSQL database. Based on JDBC.
@@ -174,12 +176,15 @@ public class MyPostgreWrapper implements CommonDatabaseActions,
     public boolean executeDatabaseAction(String query) {
         if (this.isConnected()) {
             try {
-                return this.connection.createStatement().execute(query);
+                this.connection.createStatement().execute(query);
             } catch (SQLException e) {
-                System.err.println("Action failed.");
+                System.err.println("Query failed."+" "+e.getMessage());
+                return false;
             }
+            return true;
+        } else {
+            return false;
         }
-        return false;
     }
 
     /**
@@ -225,5 +230,23 @@ public class MyPostgreWrapper implements CommonDatabaseActions,
             }
         }
         return result.toString().replaceAll("[\\[\\]]", "");
+    }
+
+    public String getDatabaseHost() {
+        try {
+            ArrayList<String> result = new ArrayList<>(
+                    Arrays.asList(this.connection.getMetaData().getURL().split("[/:=?&]")));
+            Vector<String> blanks = new Vector<>();
+            result.forEach(e ->{
+                if(e.isBlank() || e.isEmpty()){
+                    blanks.add(e);
+                }
+            });
+            result.removeAll(blanks);
+            // TODO FINIRE QUI
+            return result.toString().replaceAll("[\\[\\]]", "");
+        } catch (SQLException e) {
+            return "";
+        }
     }
 }

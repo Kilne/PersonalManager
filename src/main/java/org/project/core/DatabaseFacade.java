@@ -21,13 +21,16 @@ public class DatabaseFacade {
     private final PostgreBuilder postgreBuilder = new PostgreBuilder();
     private MyPostgreWrapper database;
 
+    /**
+     * Sets the facade to a default database.
+     */
     public DatabaseFacade() {
         this.database = postgreBuilder.build();
         this.postgreBuilder.reset();
     }
 
     /**
-     * Sets the database coordinator.
+     * Sets the database wrapper.
      * @param host The host.
      * @param port The port.
      * @param database The database.
@@ -214,32 +217,61 @@ public class DatabaseFacade {
     public boolean createUserInDatabase(String username, String password) {
         String userCreation = "CREATE USER " + username + " WITH PASSWORD '" + password + "';";
         String userPrivileges =
-                "GRANT CONNECT ON DATABASE " + this.database.getDatabaseName() + " TO " + username +
+                "GRANT CONNECT ON DATABASE " + this.database.getDatabaseName() + " TO " + username + ";" +
                 "GRANT USAGE ON SCHEMA "+ this.database.getDatabaseSchema() +" TO " + username + ";";
         String createUserTable = "CREATE TABLE " +
                 this.database.getDatabaseSchema()+"."+username +
                 "(ID SERIAL PRIMARY KEY, " +
-                "NAME CHARACHTER VARYING, " +
+                "NAME CHARACTER VARYING, " +
                 "DUEDATE DATE, " +
                 "TARGET DOUBLE PRECISION, " +
-                "DESCRIPTION CHARACHTER VARYING, " +
+                "DESCRIPTION CHARACTER VARYING, " +
                 "PROGRESS DOUBLE PRECISION, " +
                 "STEPSNUMBER BIGINT, " +
                 "STEPSCOMPLETED BIGINT, " +
-                "STEPSVALUE DOUBLE PRECISION) "+
-                "TABLESPACE pg_default "+
-                "ALTER TABLE IF EXISTS "+this.database.getDatabaseSchema()+"."+username+" OWNER TO "+username+
+                "STEPSVALUE DOUBLE PRECISION);"+
+                "ALTER TABLE IF EXISTS "+this.database.getDatabaseSchema()+"."+username+" OWNER TO "+username+ ";"+
                 "GRANT ALL ON TABLE "+this.database.getDatabaseSchema()+"."+username+" TO "+username+";";
+
         try{
-            /*if(this.database.executeDatabaseAction(userCreation)
+            if(this.database.executeDatabaseAction(userCreation)
              && this.database.executeDatabaseAction(userPrivileges)
              && this.database.executeDatabaseAction(createUserTable)){
                 return true;
-            }*/
-            return this.database.executeDatabaseAction(userCreation);
+            }
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return false;
         }
+        return false;
+    }
 
+    public boolean removeUserFromDatabase(String username) {
+
+        String removeUserPrivileges =
+                "REVOKE CONNECT ON DATABASE " + this.database.getDatabaseName() + " FROM " + username + ";" +
+                "REVOKE USAGE ON SCHEMA "+ this.database.getDatabaseSchema() +" FROM " + username + ";"+
+                "REASSIGN OWNED BY "+username+" TO "+
+                        this.database.select(
+                                "select usename from pg_catalog.pg_user where usesuper = true")
+                                .split(":")[1] +";";
+        String userTableRemoval = "DROP TABLE " + this.database.getDatabaseSchema()+"."+username + ";";
+        String userRemoval = "DROP USER " + username + ";";
+
+        try{
+            if( this.database.executeDatabaseAction(removeUserPrivileges)
+                && this.database.executeDatabaseAction(userTableRemoval)
+                && this.database.executeDatabaseAction(userRemoval)){
+                return true;
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+        return false;
+    }
+
+    public String getClientInfo() {
+        return this.database.getDatabaseHost();
     }
 }

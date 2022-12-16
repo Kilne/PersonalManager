@@ -59,5 +59,13 @@ public class Coordinator {
         return this.mediatorInstance.createUserInDatabase(username, password);
     }
 
+    public DatabaseFacade getUserInstance() {
+        return this.userInstance;
+    }
+
+    public DatabaseFacade getMediatorInstance() {
+        return this.mediatorInstance;
+    }
+
 
 }
