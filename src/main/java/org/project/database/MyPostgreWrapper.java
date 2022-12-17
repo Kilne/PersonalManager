@@ -232,7 +232,7 @@ public class MyPostgreWrapper implements CommonDatabaseActions,
         return result.toString().replaceAll("[\\[\\]]", "");
     }
 
-    public String getDatabaseHost() {
+    public String[] getDatabaseHostAndPort() {
         try {
             ArrayList<String> result = new ArrayList<>(
                     Arrays.asList(this.connection.getMetaData().getURL().split("[/:=?&]")));
@@ -243,10 +243,12 @@ public class MyPostgreWrapper implements CommonDatabaseActions,
                 }
             });
             result.removeAll(blanks);
-            // TODO FINIRE QUI
-            return result.toString().replaceAll("[\\[\\]]", "");
+            String [] hostAndPort = new String[2];
+            hostAndPort[0] = result.get(2);
+            hostAndPort[1] = result.get(3);
+            return hostAndPort;
         } catch (SQLException e) {
-            return "";
+            return new String[]{"",""};
         }
     }
 }

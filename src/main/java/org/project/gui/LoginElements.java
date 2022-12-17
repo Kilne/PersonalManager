@@ -41,7 +41,7 @@ public class LoginElements {
         loginField.setId("loginField");
         passwordField.setId("passwordField");
         loginButton.setOnAction(e -> {
-
+            // TODO: login logic
         });
         registerButton.setOnAction(e -> mainWindow
                 .changeScene("Register"));

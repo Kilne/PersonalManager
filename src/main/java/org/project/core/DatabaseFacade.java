@@ -8,6 +8,7 @@ import org.project.database.MyPostgreWrapper;
 import org.project.database.PostgreBuilder;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Database Facade.
@@ -271,7 +272,7 @@ public class DatabaseFacade {
         return false;
     }
 
-    public String getClientInfo() {
-        return this.database.getDatabaseHost();
+    public String[] getClientInfo() {
+        return this.database.getDatabaseHostAndPort();
     }
 }
