@@ -5,6 +5,13 @@ import io.github.cdimascio.dotenv.Dotenv;
 import java.net.DatagramSocket;
 import java.net.ServerSocket;
 
+/**
+ * Class for discovering the database.
+ * <br>
+ * This class is used to discover the database and connect to it.
+ * <br>
+ * @author luca maiuri
+ */
 public class DiscoverDatabase {
 
     Dotenv dotenv;
@@ -23,6 +30,10 @@ public class DiscoverDatabase {
         }
     }
 
+    /**
+     * Load the environment variables.
+     * @return True if the environment variables are loaded, false otherwise.
+     */
     private boolean loadDotenv() {
         try {
             this.dotenv = Dotenv.configure().ignoreIfMalformed().load();
@@ -32,6 +43,10 @@ public class DiscoverDatabase {
         }
     }
 
+    /**
+     * Connect to the local database. The database is discovered automatically.
+     * @return The database instance.
+     */
     public DatabaseFacade connectToLocalDatabase() {
         if (this.loadDotenv()) {
             if (!this.discoverLocalService(Integer.parseInt(this.dotenv.get("DB_PORT")))) {

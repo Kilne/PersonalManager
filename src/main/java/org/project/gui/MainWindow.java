@@ -50,8 +50,7 @@ public class MainWindow extends Application implements Runnable {
         this.window = stage;
         loadElements();
         this.window.setTitle("Personal Manager");
-        this.window.setScene(this.elements.get("User"));
-        populateProjects();
+        this.window.setScene(this.elements.get("Login"));
         this.window.show();
     }
 

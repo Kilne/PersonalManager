@@ -1,11 +1,14 @@
 package org.project.gui;
 
+import io.github.cdimascio.dotenv.Dotenv;
+import io.github.cdimascio.dotenv.DotenvBuilder;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import org.project.core.DatabaseFacade;
 
 /**
  * Login elements of the application
@@ -41,7 +44,21 @@ public class LoginElements {
         loginField.setId("loginField");
         passwordField.setId("passwordField");
         loginButton.setOnAction(e -> {
-            // TODO: login logic
+            Dotenv dotenv = Dotenv.configure().ignoreIfMalformed().load();
+            DatabaseFacade userDB= new DatabaseFacade(
+                    dotenv.get("DB_HOST"),
+                    Integer.parseInt(dotenv.get("DB_PORT")),
+                    dotenv.get("DB_NAME"),
+                    loginField.getText(),
+                    passwordField.getText()
+            );
+            if(userDB.connect()){
+                MainWindow.getCoordinator().setUserInstance(userDB);
+                mainWindow.changeScene("User");
+                mainWindow.populateProjects();
+            }else {
+                // TODO FARE la gestione dell'errore
+            }
         });
         registerButton.setOnAction(e -> mainWindow
                 .changeScene("Register"));
