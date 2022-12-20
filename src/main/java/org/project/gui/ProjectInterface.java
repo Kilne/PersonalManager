@@ -82,14 +82,13 @@ public class ProjectInterface {
             });
             if (result.get()) {
                 this.setProjectInterfaceORM(logic.getProject());
+                // TODO FARE BEN IL CAMBIO DI PROGETTO VA MANDATO ANCHE AL DATABASE QUI INVECE LO FAI SOLO LOCALE
                 MainWindow.getCoordinator().removeProject(this.orm.getP_id());
                 MainWindow.getCoordinator().addProject(this.orm);
                 window.close();
             }
         });
-        cancelButton.setOnAction(e -> {
-            window.close();
-        });
+        cancelButton.setOnAction(e -> window.close());
         addStepButton.setOnAction(e -> {
             this.logic.setProject(this.orm);
             if (this.logic.addStepCompleted()) {
