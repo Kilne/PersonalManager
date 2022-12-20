@@ -75,6 +75,7 @@ public class UserProjectList {
     private void initStaticElements() {
         //User section and CSS
         Label loggedAs = new Label("Logged as:");
+        // TODO: Add user name
         Label userName = new Label("UserPlaceholder");
         userName.setId("userName");
         loggedAs.setStyle("-fx-font-weight: bold; -fx-font-size: 15px; -fx-text-fill: #ffffff;");

@@ -40,9 +40,11 @@ public class RegisterElements {
         registerButton.setOnAction(e -> {
             //TODO: Add register logic
         });
-        cancelButton.setOnAction(e -> mainWindow
-                .changeScene("Login"));
-
+        cancelButton.setOnAction(e -> {
+            mainWindow.changeScene("Login");
+            loginField.clear();
+            passwordField.clear();
+        });
         // GRID
         registerGrid.setAlignment(javafx.geometry.Pos.CENTER);
         registerGrid.setHgap(10);

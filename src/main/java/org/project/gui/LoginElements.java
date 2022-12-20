@@ -44,18 +44,20 @@ public class LoginElements {
         passwordField.setId("passwordField");
         loginButton.setOnAction(e -> {
             Dotenv dotenv = Dotenv.configure().ignoreIfMalformed().load();
-            DatabaseFacade userDB= new DatabaseFacade(
+            DatabaseFacade userDB = new DatabaseFacade(
                     dotenv.get("DB_HOST"),
                     Integer.parseInt(dotenv.get("DB_PORT")),
                     dotenv.get("DB_NAME"),
                     loginField.getText(),
                     passwordField.getText()
             );
-            if(userDB.connect()){
+            loginField.clear();
+            passwordField.clear();
+            if (userDB.connect()) {
                 MainWindow.getCoordinator().setUserInstance(userDB);
                 mainWindow.changeScene("User");
                 mainWindow.populateProjects();
-            }else {
+            } else {
                 ErrorWindow errorWindow = new ErrorWindow("Login failed, check your credentials");
                 errorWindow.show();
             }
