@@ -75,22 +75,29 @@ public class UserProjectList {
     private void initStaticElements() {
         //User section and CSS
         Label loggedAs = new Label("Logged as:");
-        // TODO: Add user name
-        Label userName = new Label("UserPlaceholder");
-        userName.setId("userName");
+        Label userName = new Label("userPlaceHolder");
+        userName.setId("usernameLabel");
         loggedAs.setStyle("-fx-font-weight: bold; -fx-font-size: 15px; -fx-text-fill: #ffffff;");
         userName.setStyle("-fx-font-weight: bold; -fx-font-size: 15px; -fx-text-fill: #ffffff;");
 
         //Buttons
         Button createProject = new Button("Create Project");
         Button logout = new Button("Logout");
+        Button userOptions = new Button("User Options");
 
         //Events for buttons
-        logout.setOnAction(e -> mainWindow.changeScene("Login"));
+        logout.setOnAction(e -> {
+            mainWindow.changeScene("Login");
+            MainWindow.getCoordinator().getUserInstance().disconnect();
+            MainWindow.getCoordinator().setUserInstance(null);
+        });
         createProject.setOnAction(e -> {
             ProjectCreatorInterface projectCreatorInterface = new ProjectCreatorInterface(mainWindow);
             projectCreatorInterface.display();
             mainWindow.populateProjects();
+        });
+        userOptions.setOnAction(e -> {
+            // TODO fare le opzioni di un user, delete e cosi via.
         });
 
         //Add elements to VBox
@@ -98,7 +105,8 @@ public class UserProjectList {
                 loggedAs,
                 userName,
                 createProject,
-                logout);
+                logout,
+                userOptions);
     }
 
 }

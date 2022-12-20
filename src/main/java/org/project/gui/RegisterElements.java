@@ -1,10 +1,13 @@
 package org.project.gui;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import org.project.core.DatabaseFacade;
 
 /**
  * Register elements of the application
@@ -31,14 +34,36 @@ public class RegisterElements {
         Label loginLabel = new Label("Username");
         Label passwordLabel = new Label("Password");
         TextField loginField = new TextField();
-        TextField passwordField = new TextField();
+        PasswordField passwordField = new PasswordField();
         GridPane registerGrid = new GridPane();
 
         // SET ELEMENTS
         loginField.setId("loginField");
         passwordField.setId("passwordField");
+
+        // BUTTONS EVENT
         registerButton.setOnAction(e -> {
-            //TODO: Add register logic
+            Dotenv dotenv = Dotenv.configure().ignoreIfMalformed().load();
+            String username = loginField.getText();
+            String password = passwordField.getText();
+            if(MainWindow.getCoordinator().getMediatorInstance().createUserInDatabase(username, password)) {
+                DatabaseFacade userDB = new DatabaseFacade(
+                        dotenv.get("DB_HOST"),
+                        Integer.parseInt(dotenv.get("DB_PORT")),
+                        dotenv.get("DB_NAME"),
+                        username,
+                        password);
+                MainWindow.getCoordinator().setUserInstance(userDB);
+                MainWindow.getCoordinator().getUserInstance().connect();
+                mainWindow.changeScene("User");
+                mainWindow.setUsername();
+                mainWindow.populateProjects();
+            }else{
+                ErrorWindow errorWindow = new ErrorWindow("Error during register username, try again");
+                errorWindow.show();
+            }
+            loginField.clear();
+            passwordField.clear();
         });
         cancelButton.setOnAction(e -> {
             mainWindow.changeScene("Login");

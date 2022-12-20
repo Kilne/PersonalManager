@@ -51,13 +51,15 @@ public class LoginElements {
                     loginField.getText(),
                     passwordField.getText()
             );
+            MainWindow.getCoordinator().setUserInstance(userDB);
             loginField.clear();
             passwordField.clear();
-            if (userDB.connect()) {
-                MainWindow.getCoordinator().setUserInstance(userDB);
+            if (MainWindow.getCoordinator().getUserInstance().connect()) {
                 mainWindow.changeScene("User");
+                mainWindow.setUsername();
                 mainWindow.populateProjects();
             } else {
+                MainWindow.getCoordinator().setUserInstance(null);
                 ErrorWindow errorWindow = new ErrorWindow("Login failed, check your credentials");
                 errorWindow.show();
             }

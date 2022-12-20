@@ -8,7 +8,6 @@ import org.project.database.MyPostgreWrapper;
 import org.project.database.PostgreBuilder;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * Database Facade.
@@ -247,6 +246,11 @@ public class DatabaseFacade {
         return false;
     }
 
+    /**
+     * Deletes a user from the database with all his elements.
+     * @param username Username table to execute the query.
+     * @return True if the user was deleted, false otherwise.
+     */
     public boolean removeUserFromDatabase(String username) {
 
         String removeUserPrivileges =
@@ -272,7 +276,19 @@ public class DatabaseFacade {
         return false;
     }
 
+    /**
+     * Returns the database host and port.
+     * @return The database host and port in array format.
+     */
     public String[] getClientInfo() {
         return this.database.getDatabaseHostAndPort();
+    }
+
+    /**
+     * Get the current user.
+     * @return The current user.
+     */
+    public String getCurrentUser(){
+        return this.database.select("select current_user;").split(":")[1];
     }
 }

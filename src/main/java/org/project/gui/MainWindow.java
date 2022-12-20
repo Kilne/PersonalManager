@@ -8,6 +8,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.project.ORM.PersonalManagerORM;
 import org.project.core.Coordinator;
@@ -82,10 +83,8 @@ public class MainWindow extends Application implements Runnable {
             for (Node node : nodes) {
                 if (node instanceof ScrollPane scrollPane) {
                     GridPane scrollPaneNodes = (GridPane) scrollPane.getContent();
-                    MainWindow.coordinator.getUserProjects().forEach((s, personalManagerORM) -> {
-                        scrollPaneNodes.add(new ProjectCard(this).assembleCard(),
-                                0, scrollPaneNodes.getChildren().size() + 1);
-                    });
+                    MainWindow.coordinator.getUserProjects().forEach((s, personalManagerORM) -> scrollPaneNodes.add(new ProjectCard(this).assembleCard(),
+                            0, scrollPaneNodes.getChildren().size() + 1));
                     ArrayList<PersonalManagerORM> userProjects = new ArrayList<>(MainWindow.coordinator.getUserProjects().values());
                     AtomicInteger i = new AtomicInteger();
                     scrollPaneNodes.getChildren().forEach(cardNode -> {
@@ -127,6 +126,26 @@ public class MainWindow extends Application implements Runnable {
         }
     }
 
+    /**
+     * Sets the username of the current user in the user scene.
+     */
+    protected void setUsername() {
+        this.window.getScene().getRoot().getChildrenUnmodifiable().forEach(
+            elements -> {
+                if (elements instanceof VBox vBox) {
+                    vBox.getChildren().forEach(
+                            vboxElement -> {
+                                if (vboxElement instanceof Label label) {
+                                    if (label.getId() != null && label.getId().equals("usernameLabel")) {
+                                        label.setText(MainWindow.coordinator.getUserInstance().getCurrentUser());
+                                    }
+                                }
+                            }
+                    );
+                }
+            }
+        );
+    }
 
     @Override
     public void run() {
