@@ -1,8 +1,10 @@
 package org.project;
 
 import io.github.cdimascio.dotenv.Dotenv;
+import javafx.application.Application;
 import org.project.core.Coordinator;
 import org.project.core.DiscoverDatabase;
+import org.project.gui.MainWindow;
 
 public class Main {
 
@@ -11,7 +13,9 @@ public class Main {
         Coordinator coordinator = new Coordinator();
         DiscoverDatabase discoverDatabase = new DiscoverDatabase();
         coordinator.setMediatorInstance(discoverDatabase.connectToLocalDatabase());
+        coordinator.setMainGUI(new MainWindow());
         System.out.println(coordinator.getMediatorInstance().connect());
+        coordinator.getMainGUI().run();
         System.out.println(coordinator.getMediatorInstance().disconnect());
     }
 }

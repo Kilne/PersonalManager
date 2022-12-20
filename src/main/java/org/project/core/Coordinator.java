@@ -25,6 +25,7 @@ public class Coordinator {
 
     public void setMainGUI(MainWindow mainGUI) {
         this.mainGUI = mainGUI;
+        MainWindow.setCoordinator(this);
     }
 
     public void setUserInstance(DatabaseFacade userInstance) {
@@ -66,6 +67,8 @@ public class Coordinator {
     public DatabaseFacade getMediatorInstance() {
         return this.mediatorInstance;
     }
+
+    public MainWindow getMainGUI() {return this.mainGUI;}
 
 
 }

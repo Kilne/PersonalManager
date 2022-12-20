@@ -1,7 +1,6 @@
 package org.project.gui;
 
 import io.github.cdimascio.dotenv.Dotenv;
-import io.github.cdimascio.dotenv.DotenvBuilder;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -57,7 +56,8 @@ public class LoginElements {
                 mainWindow.changeScene("User");
                 mainWindow.populateProjects();
             }else {
-                // TODO FARE la gestione dell'errore
+                ErrorWindow errorWindow = new ErrorWindow("Login failed, check your credentials");
+                errorWindow.show();
             }
         });
         registerButton.setOnAction(e -> mainWindow
