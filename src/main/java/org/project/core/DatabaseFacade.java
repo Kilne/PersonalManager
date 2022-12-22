@@ -14,7 +14,6 @@ import java.util.ArrayList;
  *
  * @author Luca Maiuri
  */
-@SuppressWarnings("unused")
 public class DatabaseFacade {
     private final MyPostgresDataProcess dataProcess = new MyPostgresDataProcess();
     private final PostgreQueryBuilder queryBuilder = new PostgreQueryBuilder();

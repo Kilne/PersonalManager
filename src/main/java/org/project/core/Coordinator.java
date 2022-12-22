@@ -3,6 +3,7 @@ package org.project.core;
 import org.project.ORM.PersonalManagerORM;
 import org.project.gui.MainWindow;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -56,8 +57,10 @@ public class Coordinator {
         return this.userProjects;
     }
 
-    public boolean createUser(String username, String password) {
-        return this.mediatorInstance.createUserInDatabase(username, password);
+    public void setUserProjects(ArrayList<PersonalManagerORM> projects) {
+        for (PersonalManagerORM project : projects) {
+            this.userProjects.put(project.getP_id(), project);
+        }
     }
 
     public DatabaseFacade getUserInstance() {

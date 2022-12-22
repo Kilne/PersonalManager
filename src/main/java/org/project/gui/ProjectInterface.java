@@ -8,7 +8,9 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import org.project.ORM.PersonalManagerORM;
 import org.project.core.ProjectEditorLogic;
+import org.project.core.adapters.QueryType;
 
+import java.util.ArrayList;
 import java.util.Vector;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -68,7 +70,7 @@ public class ProjectInterface {
 
         // SET ELEMENTS AND EVENTS
         saveButton.setOnAction(e -> {
-
+            this.logic.setProject(orm);
             Vector<Boolean> tests = new Vector<>();
             AtomicReference<Boolean> result = new AtomicReference<>(true);
             tests.add(logic.changeName(projectNameField.getText()));
@@ -81,10 +83,24 @@ public class ProjectInterface {
                 }
             });
             if (result.get()) {
-                this.setProjectInterfaceORM(logic.getProject());
+                ArrayList<PersonalManagerORM> project_to_update = new ArrayList<>();
+                project_to_update.add(this.logic.getProject());
                 // TODO FARE BEN IL CAMBIO DI PROGETTO VA MANDATO ANCHE AL DATABASE QUI INVECE LO FAI SOLO LOCALE
-                MainWindow.getCoordinator().removeProject(this.orm.getP_id());
-                MainWindow.getCoordinator().addProject(this.orm);
+                MainWindow.getCoordinator().setUserProjects(
+                        MainWindow.getCoordinator().getUserInstance().queryTheDatabase(
+                                QueryType.UPDATE,
+                                MainWindow.getCoordinator().getUserInstance().getCurrentUser(),
+                                project_to_update
+                        )
+                );
+                AtomicReference<Boolean> changes = new AtomicReference<>(true);
+                MainWindow.getCoordinator().getUserProjects().forEach(
+                        (k,v) -> {
+                            if(k.equals(this.orm.getP_id())){
+                                // TODO FINIRE LA VERIFICA DI CAMBIO DI PROGETTO
+                            }
+                        }
+                );
                 window.close();
             }
         });
