@@ -55,6 +55,7 @@ public class ProjectCard {
         Button deleteButton = new Button("Delete");
         deleteButton.setId("deleteButton");
         deleteButton.setOnAction(e -> {
+            // TODO CANCELLA PURE NEL DB NON SOLO LOCALE
             MainWindow.getCoordinator().removeProject(projectID.getText());
             mainWindow.populateProjects();
         });

@@ -11,8 +11,10 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import org.project.ORM.PersonalManagerORM;
 import org.project.core.ProjectCreatorLogic;
+import org.project.core.adapters.QueryType;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 /**
  * Prject creator interface
@@ -66,22 +68,27 @@ public class ProjectCreatorInterface {
         //Event handlers
         createButton.setOnAction(e -> {
             ProjectCreatorLogic logic = new ProjectCreatorLogic();
-            if (logic.createOne(P_nameField.getText(), P_descriptionField.getText(), P_deadlineField.getValue().toString(),
+            if (logic.createOne(P_nameField.getText(),
+                    P_descriptionField.getText(),
+                    P_deadlineField.getValue().toString(),
                     P_targetField.getText())) {
                 // TODO NON LO PUOI CREARE TU L'ID MA LO DEVI OTTENERE DAL DB PER CUI PRENDI QUESTI DATI E LI
                 //  PASSI AL COORDINATOR CHE LI PASSA AL DB E RICEVI L'ID CON IL PROGETTO DOPO, IL METODO QUI VALIDA I DATI
                 //  E LI PASSA
-                PersonalManagerORM orm = logic.getProject();
-
-
+                ArrayList<PersonalManagerORM> data = new ArrayList<>();
+                data.add(logic.getProject());
+                MainWindow.getCoordinator().getUserInstance().queryTheDatabase(
+                        QueryType.INSERT,
+                        MainWindow.getCoordinator().getUserInstance().getCurrentUser(),
+                        data
+                );
                 stage.close();
             } else {
-                System.out.println("Project not created");
+                ErrorWindow errorWindow = new ErrorWindow( "Error while creating the project");
+                errorWindow.show();
             }
         });
-        cancelButton.setOnAction(e -> {
-            this.stage.close();
-        });
+        cancelButton.setOnAction(e -> this.stage.close());
 
         //Grid
         GridPane grid = new GridPane();

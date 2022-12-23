@@ -251,4 +251,16 @@ public class MyPostgreWrapper implements CommonDatabaseActions,
             return new String[]{"",""};
         }
     }
+
+    /**
+     * Gets the database user.
+     * @return The database user. Or an empty string if the connection is not established.
+     */
+    public String getCurrentUser(){
+        try {
+            return this.connection.getMetaData().getUserName();
+        } catch (SQLException e) {
+            return "";
+        }
+    }
 }

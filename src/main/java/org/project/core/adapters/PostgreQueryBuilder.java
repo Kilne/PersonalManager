@@ -14,9 +14,9 @@ public class PostgreQueryBuilder {
     private static final String encloser = "\"";
     private static final String lightEnclose = "'";
     private static final String select = "SELECT * FROM public." + encloser + "tablename" + encloser;
-    private static final String insert = "INSERT INTO public." + encloser + "tablename" + encloser + " () VALUES ()";
-    private static final String update = "UPDATE public." + encloser + "tablename" + encloser + " SET () WHERE ()";
-    private static final String delete = "DELETE FROM public" + encloser + "tablename" + encloser + " WHERE ()";
+    private static final String insert = "INSERT INTO public." + encloser + "tablename" + encloser +" () VALUES ()";
+    private static final String update = "UPDATE public." + encloser + "tablename" + encloser +" SET () WHERE ()";
+    private static final String delete = "DELETE FROM public" + encloser + "tablename" + encloser +" WHERE ()";
     private final TreeMap<String, String> args = new TreeMap<>();
     private String query;
     private QueryType type;
@@ -126,7 +126,7 @@ public class PostgreQueryBuilder {
         StringBuilder columns = new StringBuilder();
         StringBuilder values = new StringBuilder();
         for (Map.Entry<String, String> entry : args.entrySet()) {
-            columns.append(encloser).append(entry.getKey()).append(encloser).append(", ");
+            columns.append(encloser).append(entry.getKey().toLowerCase()).append(encloser).append(", ");
             values.append(lightEnclose).append(entry.getValue()).append(lightEnclose).append(", ");
         }
         columns.delete(columns.length() - 2, columns.length());
@@ -138,7 +138,7 @@ public class PostgreQueryBuilder {
                 StringBuilder valuesBuilder = new StringBuilder();
                 for (Map.Entry<String, String> entry : this.args.entrySet()) {
                     if (entry.getKey().equalsIgnoreCase("id")) continue;
-                    columnsBuilder.append(encloser).append(entry.getKey()).append(encloser).append(",");
+                    columnsBuilder.append(encloser).append(entry.getKey().toLowerCase()).append(encloser).append(",");
                     valuesBuilder.append(lightEnclose).append(entry.getValue()).append(lightEnclose).append(",");
                 }
                 transientQuery = transientQuery.replaceFirst("\\(\\)",

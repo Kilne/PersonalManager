@@ -138,17 +138,21 @@ public class DatabaseFacade {
         String syncRes = this.database.select(
                 this.queryBuilder.setQueryType(QueryType.SELECT).setTable(table).buildQuery().getQuery()
         );
-
-        if (syncRes.contains(",")) {
-            String[] rows = syncRes.split(",");
-            for (String row : rows) {
-                this.dataProcess.setData(row.trim());
+        if (syncRes != null) {
+            if (syncRes.contains(",")) {
+                String[] rows = syncRes.split(",");
+                for (String row : rows) {
+                    this.dataProcess.setData(row.trim());
+                    res.add(this.dataProcess.packData());
+                }
+            } else {
+                this.dataProcess.setData(syncRes);
                 res.add(this.dataProcess.packData());
             }
-        } else {
-            this.dataProcess.setData(syncRes);
-            res.add(this.dataProcess.packData());
+        }else {
+            System.err.println("Error while syncing data.");
         }
+
         return res;
     }
 
@@ -285,9 +289,9 @@ public class DatabaseFacade {
 
     /**
      * Get the current user.
-     * @return The current user.
+     * @return The current user. Or an empty string if no connection is established.
      */
     public String getCurrentUser(){
-        return this.database.select("select current_user;").split(":")[1];
+        return this.database.getCurrentUser();
     }
 }

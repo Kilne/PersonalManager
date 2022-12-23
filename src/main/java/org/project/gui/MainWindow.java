@@ -12,6 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.project.ORM.PersonalManagerORM;
 import org.project.core.Coordinator;
+import org.project.core.adapters.QueryType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -70,6 +71,13 @@ public class MainWindow extends Application implements Runnable {
      * @see Coordinator
      */
     protected void populateProjects() {
+        MainWindow.getCoordinator().setUserProjects(
+                MainWindow.getCoordinator().getUserInstance().queryTheDatabase(
+                        QueryType.SELECT,
+                        MainWindow.getCoordinator().getUserInstance().getCurrentUser(),
+                        null
+                ));
+
         this.window.getScene().getRoot().getChildrenUnmodifiable().forEach(
                 elements -> {
                     if (elements instanceof ScrollPane scrollPane) {
@@ -78,26 +86,48 @@ public class MainWindow extends Application implements Runnable {
                 }
         );
 
-        if (MainWindow.coordinator.getUserProjects().size() != 0) {
+        if (MainWindow.getCoordinator().getUserProjects().size() != 0) {
             ObservableList<Node> nodes = this.window.getScene().getRoot().getChildrenUnmodifiable();
+
             for (Node node : nodes) {
+
                 if (node instanceof ScrollPane scrollPane) {
+
                     GridPane scrollPaneNodes = (GridPane) scrollPane.getContent();
-                    MainWindow.coordinator.getUserProjects().forEach((s, personalManagerORM) -> scrollPaneNodes.add(new ProjectCard(this).assembleCard(),
-                            0, scrollPaneNodes.getChildren().size() + 1));
-                    ArrayList<PersonalManagerORM> userProjects = new ArrayList<>(MainWindow.coordinator.getUserProjects().values());
+
+                    MainWindow.getCoordinator().getUserProjects().forEach(
+                            (s, personalManagerORM) -> scrollPaneNodes.add(
+                                    new ProjectCard(this).assembleCard(),
+                                    0,
+                                    scrollPaneNodes.getChildren().size() + 1
+                            ));
+
+                    ArrayList<PersonalManagerORM> userProjects = new ArrayList<>(
+                            MainWindow.getCoordinator().getUserProjects().values()
+                    );
+
+
                     AtomicInteger i = new AtomicInteger();
+
                     scrollPaneNodes.getChildren().forEach(cardNode -> {
+
                         GridPane card = (GridPane) cardNode;
+
                         card.getChildren().forEach(element -> {
+
                             if (element.getId() != null) {
+
                                 switch (element.getId()) {
                                     case "projectNameField" -> ((Label) element)
                                             .setText(userProjects.get(i.get()).getP_name());
                                     case "projectDescriptionField" -> ((Label) element)
                                             .setText(userProjects.get(i.get()).getP_description());
                                     case "projectDeadlineField" -> ((Label) element)
-                                            .setText(userProjects.get(i.get()).getP_dueDate().toString());
+                                            .setText(
+                                                    userProjects.get(i.get())
+                                                            .getP_dueDate()
+                                                            .toString().split("T")[0]
+                                            );
                                     case "targetField" -> ((Label) element)
                                             .setText(userProjects.get(i.get()).getP_target().toString());
                                     case "stepsTotalField" -> ((Label) element)
