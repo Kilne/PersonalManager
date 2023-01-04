@@ -78,9 +78,12 @@ public class MainWindow extends Application implements Runnable {
                         null
                 ));
 
+        // TODO-DEBUG DELETE: qua sembra non esca nulla e quindi nulla viene cancellato
+        //  vedere quale è il problema.
         this.window.getScene().getRoot().getChildrenUnmodifiable().forEach(
                 elements -> {
                     if (elements instanceof ScrollPane scrollPane) {
+                        System.out.println(((GridPane) scrollPane.getContent()).getChildren());
                         ((GridPane) scrollPane.getContent()).getChildren().clear();
                     }
                 }

@@ -4,6 +4,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.GridPane;
+import org.project.ORM.PersonalManagerORM;
+import org.project.core.adapters.QueryType;
+
+import java.util.ArrayList;
 
 public class ProjectCard {
 
@@ -56,8 +60,15 @@ public class ProjectCard {
         deleteButton.setId("deleteButton");
         deleteButton.setOnAction(e -> {
             // TODO CANCELLA PURE NEL DB NON SOLO LOCALE
-            MainWindow.getCoordinator().removeProject(projectID.getText());
-            mainWindow.populateProjects();
+            ArrayList<PersonalManagerORM> p_to_delete = new ArrayList<>();
+            p_to_delete.add(MainWindow.getCoordinator().getProject(projectID.getText()));
+            MainWindow.getCoordinator().getUserInstance().queryTheDatabase(
+                    QueryType.DELETE,
+                    MainWindow.getCoordinator().getUserInstance().getCurrentUser(),
+                    p_to_delete
+            );
+            // TODO: DEBUG NON AGGIORNA LA LISTA CONTROLLARE IL METODO
+            this.mainWindow.populateProjects();
         });
         Button editButton = new Button("Edit");
         editButton.setId("editButton");

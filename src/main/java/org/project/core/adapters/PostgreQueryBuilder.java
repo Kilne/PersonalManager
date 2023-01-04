@@ -16,7 +16,7 @@ public class PostgreQueryBuilder {
     private static final String select = "SELECT * FROM public." + encloser + "tablename" + encloser;
     private static final String insert = "INSERT INTO public." + encloser + "tablename" + encloser +" () VALUES ()";
     private static final String update = "UPDATE public." + encloser + "tablename" + encloser +" SET () WHERE ()";
-    private static final String delete = "DELETE FROM public" + encloser + "tablename" + encloser +" WHERE ()";
+    private static final String delete = "DELETE FROM public." + encloser + "tablename" + encloser +" WHERE ()";
     private final TreeMap<String, String> args = new TreeMap<>();
     private String query;
     private QueryType type;
