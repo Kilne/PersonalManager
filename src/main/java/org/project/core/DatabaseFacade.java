@@ -138,7 +138,7 @@ public class DatabaseFacade {
         String syncRes = this.database.select(
                 this.queryBuilder.setQueryType(QueryType.SELECT).setTable(table).buildQuery().getQuery()
         );
-        if (syncRes != null) {
+        if (!syncRes.isBlank() && !syncRes.isEmpty()) {
             if (syncRes.contains(",")) {
                 String[] rows = syncRes.split(",");
                 for (String row : rows) {
@@ -149,10 +149,7 @@ public class DatabaseFacade {
                 this.dataProcess.setData(syncRes);
                 res.add(this.dataProcess.packData());
             }
-        }else {
-            System.err.println("Error while syncing data.");
         }
-
         return res;
     }
 

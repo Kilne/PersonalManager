@@ -58,8 +58,13 @@ public class Coordinator {
     }
 
     public void setUserProjects(ArrayList<PersonalManagerORM> projects) {
-        for (PersonalManagerORM project : projects) {
-            this.userProjects.put(project.getP_id(), project);
+
+        if (projects.isEmpty()) {
+            this.userProjects.clear();
+        } else {
+            for (PersonalManagerORM project : projects) {
+                this.userProjects.put(project.getP_id(), project);
+            }
         }
     }
 

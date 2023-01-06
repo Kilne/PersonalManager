@@ -81,10 +81,15 @@ public class MainWindow extends Application implements Runnable {
         // TODO-DEBUG DELETE: qua sembra non esca nulla e quindi nulla viene cancellato
         //  vedere quale è il problema.
         this.window.getScene().getRoot().getChildrenUnmodifiable().forEach(
-                elements -> {
-                    if (elements instanceof ScrollPane scrollPane) {
-                        System.out.println(((GridPane) scrollPane.getContent()).getChildren());
-                        ((GridPane) scrollPane.getContent()).getChildren().clear();
+                node -> {
+                    if (node instanceof ScrollPane) {
+                        ((ScrollPane) node).getChildrenUnmodifiable().forEach(
+                                node1 -> {
+                                    if (node1 instanceof GridPane){
+                                        ((GridPane) node1).getChildren().clear();
+                                    }
+                                }
+                        );
                     }
                 }
         );
@@ -98,18 +103,21 @@ public class MainWindow extends Application implements Runnable {
 
                     GridPane scrollPaneNodes = (GridPane) scrollPane.getContent();
 
-                    MainWindow.getCoordinator().getUserProjects().forEach(
-                            (s, personalManagerORM) -> scrollPaneNodes.add(
-                                    new ProjectCard(this).assembleCard(),
-                                    0,
-                                    scrollPaneNodes.getChildren().size() + 1
-                            ));
+                    int total_projects = MainWindow.getCoordinator().getUserProjects().size();
 
                     ArrayList<PersonalManagerORM> userProjects = new ArrayList<>(
                             MainWindow.getCoordinator().getUserProjects().values()
                     );
 
+                    for (int i = 0; i < total_projects; i++) {
+                        scrollPaneNodes.add(
+                                new ProjectCard(this).assembleCard(),
+                                0,
+                                i
+                        );
+                    }
 
+                    // TODO - DEBUG: Analizzare questo ciclo e capire che succede dopo il delete
                     AtomicInteger i = new AtomicInteger();
 
                     scrollPaneNodes.getChildren().forEach(cardNode -> {
