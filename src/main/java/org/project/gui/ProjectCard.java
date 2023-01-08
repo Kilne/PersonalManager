@@ -1,8 +1,6 @@
 package org.project.gui;
 
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import org.project.ORM.PersonalManagerORM;
 import org.project.core.adapters.QueryType;
@@ -59,20 +57,24 @@ public class ProjectCard {
         Button deleteButton = new Button("Delete");
         deleteButton.setId("deleteButton");
         deleteButton.setOnAction(e -> {
-            // TODO CANCELLA PURE NEL DB NON SOLO LOCALE
-            ArrayList<PersonalManagerORM> p_to_delete = new ArrayList<>();
-            p_to_delete.add(MainWindow.getCoordinator().getProject(projectID.getText()));
-            MainWindow.getCoordinator().getUserInstance().queryTheDatabase(
-                    QueryType.DELETE,
-                    MainWindow.getCoordinator().getUserInstance().getCurrentUser(),
-                    p_to_delete
-            );
-            System.out.println(MainWindow.getCoordinator().getUserInstance().queryTheDatabase(QueryType.SELECT,
-                    MainWindow.getCoordinator().getUserInstance().getCurrentUser(),
-                    null));
-            // TODO: DEBUG NON AGGIORNA LA LISTA CONTROLLARE IL METODO
-            // TODO: FORSE E UN PROBLEMA CON LO SCROLL PANE CHE TORNA ROBA STRANA QUANDO GLI FAI IL FOR EACH
-            this.mainWindow.populateProjects();
+            Dialog<ButtonType> dialog = new Dialog<>();
+            dialog.setTitle("Delete Project");
+            dialog.setHeaderText("Are you sure you want to delete this project?");
+            dialog.getDialogPane().getButtonTypes().addAll(
+                    javafx.scene.control.ButtonType.YES,
+                    javafx.scene.control.ButtonType.NO);
+            dialog.showAndWait().ifPresent(response -> {
+                if (response == javafx.scene.control.ButtonType.YES) {
+                    ArrayList<PersonalManagerORM> p_to_delete = new ArrayList<>();
+                    p_to_delete.add(MainWindow.getCoordinator().getProject(projectID.getText()));
+                    MainWindow.getCoordinator().getUserInstance().queryTheDatabase(
+                            QueryType.DELETE,
+                            MainWindow.getCoordinator().getUserInstance().getCurrentUser(),
+                            p_to_delete
+                    );
+                    this.mainWindow.populateProjects();
+                }
+            });
         });
         Button editButton = new Button("Edit");
         editButton.setId("editButton");

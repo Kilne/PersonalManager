@@ -72,7 +72,13 @@ public class MainWindow extends Application implements Runnable {
                         QueryType.SELECT,
                         MainWindow.getCoordinator().getUserInstance().getCurrentUser(),
                         null
-                ));
+                )
+        );
+
+        GridPane scrollGrid = (GridPane) ((ScrollPane) this.window.getScene().lookup("#scrollPane")).getContent();
+        if(scrollGrid.getChildren().size()!=0) {
+            scrollGrid.getChildren().clear();
+        }
 
         if (MainWindow.getCoordinator().getUserProjects().size() != 0) {
             AtomicInteger i = new AtomicInteger(0);

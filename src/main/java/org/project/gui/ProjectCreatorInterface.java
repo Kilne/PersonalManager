@@ -72,9 +72,6 @@ public class ProjectCreatorInterface {
                     P_descriptionField.getText(),
                     P_deadlineField.getValue().toString(),
                     P_targetField.getText())) {
-                // TODO NON LO PUOI CREARE TU L'ID MA LO DEVI OTTENERE DAL DB PER CUI PRENDI QUESTI DATI E LI
-                //  PASSI AL COORDINATOR CHE LI PASSA AL DB E RICEVI L'ID CON IL PROGETTO DOPO, IL METODO QUI VALIDA I DATI
-                //  E LI PASSA
                 ArrayList<PersonalManagerORM> data = new ArrayList<>();
                 data.add(logic.getProject());
                 MainWindow.getCoordinator().getUserInstance().queryTheDatabase(
