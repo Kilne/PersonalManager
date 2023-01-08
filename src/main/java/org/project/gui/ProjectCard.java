@@ -67,7 +67,11 @@ public class ProjectCard {
                     MainWindow.getCoordinator().getUserInstance().getCurrentUser(),
                     p_to_delete
             );
+            System.out.println(MainWindow.getCoordinator().getUserInstance().queryTheDatabase(QueryType.SELECT,
+                    MainWindow.getCoordinator().getUserInstance().getCurrentUser(),
+                    null));
             // TODO: DEBUG NON AGGIORNA LA LISTA CONTROLLARE IL METODO
+            // TODO: FORSE E UN PROBLEMA CON LO SCROLL PANE CHE TORNA ROBA STRANA QUANDO GLI FAI IL FOR EACH
             this.mainWindow.populateProjects();
         });
         Button editButton = new Button("Edit");

@@ -1,8 +1,6 @@
 package org.project.gui;
 
 import javafx.application.Application;
-import javafx.collections.ObservableList;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
@@ -10,11 +8,9 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import org.project.ORM.PersonalManagerORM;
 import org.project.core.Coordinator;
 import org.project.core.adapters.QueryType;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -26,9 +22,9 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class MainWindow extends Application implements Runnable {
 
-    private Stage window;
     private static Coordinator coordinator;
     private final HashMap<String, Scene> elements = new HashMap<>();
+    private Stage window;
 
     public static Coordinator getCoordinator() {
         return coordinator;
@@ -78,83 +74,44 @@ public class MainWindow extends Application implements Runnable {
                         null
                 ));
 
-        // TODO-DEBUG DELETE: qua sembra non esca nulla e quindi nulla viene cancellato
-        //  vedere quale è il problema.
-        this.window.getScene().getRoot().getChildrenUnmodifiable().forEach(
-                node -> {
-                    if (node instanceof ScrollPane) {
-                        ((ScrollPane) node).getChildrenUnmodifiable().forEach(
-                                node1 -> {
-                                    if (node1 instanceof GridPane){
-                                        ((GridPane) node1).getChildren().clear();
-                                    }
-                                }
-                        );
-                    }
-                }
-        );
-
         if (MainWindow.getCoordinator().getUserProjects().size() != 0) {
-            ObservableList<Node> nodes = this.window.getScene().getRoot().getChildrenUnmodifiable();
-
-            for (Node node : nodes) {
-
-                if (node instanceof ScrollPane scrollPane) {
-
-                    GridPane scrollPaneNodes = (GridPane) scrollPane.getContent();
-
-                    int total_projects = MainWindow.getCoordinator().getUserProjects().size();
-
-                    ArrayList<PersonalManagerORM> userProjects = new ArrayList<>(
-                            MainWindow.getCoordinator().getUserProjects().values()
-                    );
-
-                    for (int i = 0; i < total_projects; i++) {
-                        scrollPaneNodes.add(
-                                new ProjectCard(this).assembleCard(),
-                                0,
-                                i
-                        );
+            AtomicInteger i = new AtomicInteger(0);
+            this.window.getScene().getRoot().getChildrenUnmodifiable().forEach(
+                    child -> {
+                        if (child instanceof ScrollPane) {
+                            GridPane innerGrid = (GridPane) ((ScrollPane) child).getContent();
+                            MainWindow.getCoordinator().getUserProjects().forEach((id, p) -> {
+                                GridPane card = new ProjectCard(this).assembleCard();
+                                card.getChildren().forEach(
+                                        cardElement -> {
+                                            try {
+                                                switch (cardElement.getId()) {
+                                                    case "projectNameField" ->
+                                                            ((Label) cardElement).setText(p.getP_name());
+                                                    case "projectDescriptionField" ->
+                                                            ((Label) cardElement).setText(p.getP_description());
+                                                    case "projectDeadlineField" ->
+                                                            ((Label) cardElement).setText(p.getP_dueDate().toString());
+                                                    case "targetField" -> ((Label) cardElement).setText(
+                                                            p.getP_target().toString());
+                                                    case "progressField" -> ((ProgressBar) cardElement).setProgress(
+                                                            p.getP_progress());
+                                                    case "stepsTotalField" -> ((Label) cardElement).setText(
+                                                            String.valueOf(p.getP_steps_value()));
+                                                    case "stepsCompletedField" -> ((Label) cardElement).setText(
+                                                            String.valueOf(p.getP_steps_completed()));
+                                                    case "projectID" ->
+                                                            ((Label) cardElement).setText(String.valueOf(id));
+                                                }
+                                            } catch (NullPointerException | ClassCastException ignored) {
+                                            }
+                                        }
+                                );
+                                innerGrid.add(card, 0, i.getAndIncrement());
+                            });
+                        }
                     }
-
-                    // TODO - DEBUG: Analizzare questo ciclo e capire che succede dopo il delete
-                    AtomicInteger i = new AtomicInteger();
-
-                    scrollPaneNodes.getChildren().forEach(cardNode -> {
-
-                        GridPane card = (GridPane) cardNode;
-
-                        card.getChildren().forEach(element -> {
-
-                            if (element.getId() != null) {
-
-                                switch (element.getId()) {
-                                    case "projectNameField" -> ((Label) element)
-                                            .setText(userProjects.get(i.get()).getP_name());
-                                    case "projectDescriptionField" -> ((Label) element)
-                                            .setText(userProjects.get(i.get()).getP_description());
-                                    case "projectDeadlineField" -> ((Label) element)
-                                            .setText(
-                                                    userProjects.get(i.get())
-                                                            .getP_dueDate()
-                                                            .toString().split("T")[0]
-                                            );
-                                    case "targetField" -> ((Label) element)
-                                            .setText(userProjects.get(i.get()).getP_target().toString());
-                                    case "stepsTotalField" -> ((Label) element)
-                                            .setText(userProjects.get(i.get()).getP_steps_number().toString());
-                                    case "stepsCompletedField" -> ((Label) element)
-                                            .setText(userProjects.get(i.get()).getP_steps_completed().toString());
-                                    case "progressField" -> ((ProgressBar) element)
-                                            .setProgress(userProjects.get(i.get()).getP_progress());
-                                    case "projectID" -> ((Label) element).setText(userProjects.get(i.get()).getP_id());
-                                }
-                            }
-                        });
-                        i.addAndGet(1);
-                    });
-                }
-            }
+            );
         } else {
             this.window.getScene().getRoot().getChildrenUnmodifiable().forEach(
                     elements -> {
@@ -172,19 +129,19 @@ public class MainWindow extends Application implements Runnable {
      */
     protected void setUsername() {
         this.window.getScene().getRoot().getChildrenUnmodifiable().forEach(
-            elements -> {
-                if (elements instanceof VBox vBox) {
-                    vBox.getChildren().forEach(
-                            vboxElement -> {
-                                if (vboxElement instanceof Label label) {
-                                    if (label.getId() != null && label.getId().equals("usernameLabel")) {
-                                        label.setText(MainWindow.coordinator.getUserInstance().getCurrentUser());
+                elements -> {
+                    if (elements instanceof VBox vBox) {
+                        vBox.getChildren().forEach(
+                                vboxElement -> {
+                                    if (vboxElement instanceof Label label) {
+                                        if (label.getId() != null && label.getId().equals("usernameLabel")) {
+                                            label.setText(MainWindow.coordinator.getUserInstance().getCurrentUser());
+                                        }
                                     }
                                 }
-                            }
-                    );
+                        );
+                    }
                 }
-            }
         );
     }
 
