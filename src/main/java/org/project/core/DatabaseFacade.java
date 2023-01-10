@@ -277,6 +277,28 @@ public class DatabaseFacade {
     }
 
     /**
+     * Manipulate the user details in the database.
+     * <br>
+     * @param query the query to execute.
+     * @return True if the query is successful.
+     */
+    public boolean userDetailsManipulation(String query){
+
+        try{
+
+            if(this.database.executeDatabaseAction(query)){
+                return true;
+            }
+
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            return false;
+        }
+
+        return false;
+    }
+
+    /**
      * Returns the database host and port.
      * @return The database host and port in array format.
      */

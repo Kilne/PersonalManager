@@ -2,10 +2,7 @@ package org.project.gui;
 
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
@@ -61,31 +58,35 @@ public class UserOptionsGui {
             editYourProfileDetails.setDisable(true);
             userNameChangeField.setEditable(true);
             userPasswordField.setEditable(true);
-            saveChanges.setDisable(true);
+            saveChanges.setDisable(false);
         });
         saveChanges.setOnAction(e -> {
-            if (!userNameChangeField.getText().isEmpty() &&
-                    !userNameChangeField.getText().isEmpty() &&
-                    !userNameChangeField.getText().isBlank() &&
-                    !userNameChangeField.getText().isBlank()
-            ) {
-                if (!userPasswordField.getText().isBlank() &&
-                        !userPasswordField.getText().isBlank()) {
-                    // TODO: se c'è la password alterare pure la password
-                    // ALTER USER user_name WITH PASSWORD 'new_password';
-                }else {
-                    // TODO: alterare username con tabelle e proprietà del database
-                    // ALTER USER myuser RENAME TO newname;
-                }
+
+            // TODO FARE PER BENE QUI GLI ALTER E I CONTROLLI
+
+            // See if fields are empty or blank then collect
+            if(!userNameChangeField.getText().isEmpty() || !userNameChangeField.getText().isBlank()){
+
+                // Collect the new username
+                String userNew = userNameChangeField.getText();
+
+                // Now check if you need to change the password too
+
+
+
             } else{
-                ErrorWindow errorWindow = new ErrorWindow("Your details are missing.");
+
+                // Then open the error and interrupt the event
+                ErrorWindow errorWindow = new ErrorWindow("Details are missing.");
                 errorWindow.show();
+
             }
+
         });
 
-
         return new Scene(currentGrid);
-    }
+
+}
 
     public void display() {
         this.currentWindow.initModality(javafx.stage.Modality.APPLICATION_MODAL);
