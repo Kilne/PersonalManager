@@ -6,6 +6,9 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+
 /**
  * Current user options
  *
@@ -31,7 +34,8 @@ public class UserOptionsGui {
         currentGrid.setPadding(new javafx.geometry.Insets(25, 25, 25, 25));
 
         // Labels
-        Label userLabel = new Label("CurrentUsername");
+        Label userLabel = new Label("Insert new username:");
+        Label passwordLabel = new Label("Insert new password:");
 
         // Fields
         TextField userNameChangeField = new TextField();
@@ -44,45 +48,87 @@ public class UserOptionsGui {
         userPasswordField.setEditable(false);
 
         // Buttons
-        Button editYourProfileDetails = new Button("Edit your details");
         Button exit = new Button("Exit");
-        Button saveChanges = new Button("Save changes");
-
-        saveChanges.setDisable(true);
+        Button changeUsername = new Button("Change username");
+        Button changePassword = new Button("Change password");
 
         // Actions
         exit.setOnAction(e -> {
             this.currentWindow.close();
         });
-        editYourProfileDetails.setOnAction(e -> {
-            editYourProfileDetails.setDisable(true);
-            userNameChangeField.setEditable(true);
-            userPasswordField.setEditable(true);
-            saveChanges.setDisable(false);
-        });
-        saveChanges.setOnAction(e -> {
 
-            // TODO FARE PER BENE QUI GLI ALTER E I CONTROLLI
+        changeUsername.setOnAction(e -> {
+            if(
+                    !userNameChangeField.getText().isBlank() &&
+                            !userNameChangeField.getText().isEmpty()
+            ){
+                String query =
+                        "ALTER USER "+
+                                MainWindow.getCoordinator().getUserInstance().getCurrentUser()+
+                                " RENAME TO "+
+                                userNameChangeField.getText();
 
-            // See if fields are empty or blank then collect
-            if(!userNameChangeField.getText().isEmpty() || !userNameChangeField.getText().isBlank()){
-
-                // Collect the new username
-                String userNew = userNameChangeField.getText();
-
-                // Now check if you need to change the password too
-
-
-
-            } else{
-
-                // Then open the error and interrupt the event
-                ErrorWindow errorWindow = new ErrorWindow("Details are missing.");
+                if(
+                        MainWindow.getCoordinator().getUserInstance().userDetailsManipulation(query)
+                ){
+                   userNameChangeField.setText("");
+                   Alert success = new Alert(Alert.AlertType.CONFIRMATION);
+                   success.setContentText("Username correctly changed.");
+                   MainWindow.getCoordinator().getUserInstance().userDetailsManipulation(
+                            "ALTER TABLE public.'"+
+                                    MainWindow.getCoordinator().getUserInstance().getCurrentUser()+
+                                    "' RENAME TO"+
+                                    userNameChangeField.getText()
+                   );
+                   this.mainGuiWindow.setUsername();
+                   this.mainGuiWindow.populateProjects();
+                   success.showAndWait();
+                }else {
+                    Alert fail = new Alert(Alert.AlertType.ERROR);
+                    fail.setContentText("There was an error with changing the username");
+                    userNameChangeField.setText("");
+                    fail.showAndWait();
+                }
+            }else{
+                ErrorWindow errorWindow = new ErrorWindow("Missing details.");
                 errorWindow.show();
-
             }
-
         });
+
+        changePassword.setOnAction(e->{
+            if(!userPasswordField.getText().isEmpty() && !userPasswordField.getText().isBlank()){
+
+                String query = "ALTER ROLE "+
+                        MainWindow.getCoordinator().getUserInstance().getCurrentUser()+
+                        " WITH PASSWORD '"+
+                        userPasswordField.getText()+
+                        "'";
+                if(MainWindow.getCoordinator().getUserInstance().userDetailsManipulation(query)){
+
+                    userPasswordField.setText("");
+                    Alert success = new Alert(Alert.AlertType.CONFIRMATION);
+                    success.setContentText("Password changed");
+                    success.showAndWait();
+                }else {
+                    Alert fail = new Alert(Alert.AlertType.ERROR);
+                    fail.setContentText("There was an error changing your password");
+                    fail.showAndWait();
+                }
+
+            }else{
+                ErrorWindow errorWindow = new ErrorWindow("Missing details.");
+                errorWindow.show();
+            }
+        });
+
+        // TODO CONTINUA QUI
+        currentGrid.add(userLabel,0,0);
+        currentGrid.add(userNameChangeField,1,0);
+        currentGrid.add(changeUsername,1,1);
+        currentGrid.add(passwordLabel,2,0);
+        currentGrid.add(userPasswordField,2,1);
+        currentGrid.add(changePassword,2,2);
+        currentGrid.add(exit,3,0);
 
         return new Scene(currentGrid);
 
