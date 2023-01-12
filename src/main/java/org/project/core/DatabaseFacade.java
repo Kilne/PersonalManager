@@ -215,10 +215,10 @@ public class DatabaseFacade {
      * @return True if the table was created, false otherwise.
      */
     public boolean createUserInDatabase(String username, String password) {
-        String userCreation = "CREATE USER " + username + " WITH PASSWORD '" + password + "';";
+        String userCreation = "CREATE USER " + username + " WITH CREATEROLE PASSWORD '" + password + "';";
         String userPrivileges =
                 "GRANT CONNECT ON DATABASE " + this.database.getDatabaseName() + " TO " + username + ";" +
-                "GRANT USAGE ON SCHEMA "+ this.database.getDatabaseSchema() +" TO " + username + ";";
+                        "GRANT USAGE ON SCHEMA " + this.database.getDatabaseSchema() + " TO " + username + ";";
         String createUserTable = "CREATE TABLE " +
                 this.database.getDatabaseSchema()+"."+username +
                 "(ID SERIAL PRIMARY KEY, " +

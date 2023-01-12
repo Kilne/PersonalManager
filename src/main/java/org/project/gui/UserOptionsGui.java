@@ -6,9 +6,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-
 /**
  * Current user options
  *
@@ -16,9 +13,9 @@ import java.util.LinkedHashMap;
  */
 public class UserOptionsGui {
 
-    private MainWindow mainGuiWindow;
+    private final MainWindow mainGuiWindow;
 
-    private Stage currentWindow = new Stage();
+    private final Stage currentWindow = new Stage();
 
     public UserOptionsGui(MainWindow mainGuiWindow) {
         this.mainGuiWindow = mainGuiWindow;
@@ -42,10 +39,7 @@ public class UserOptionsGui {
         PasswordField userPasswordField = new PasswordField();
 
         userNameChangeField.setId("userNameField");
-        userNameChangeField.setEditable(false);
-
         userPasswordField.setId("userPasswordField");
-        userPasswordField.setEditable(false);
 
         // Buttons
         Button exit = new Button("Exit");
@@ -58,6 +52,7 @@ public class UserOptionsGui {
         });
 
         changeUsername.setOnAction(e -> {
+            // TODO NON PUOI RINOMINARE L'UTENTE IN SESSIONE
             if(
                     !userNameChangeField.getText().isBlank() &&
                             !userNameChangeField.getText().isEmpty()
@@ -72,7 +67,7 @@ public class UserOptionsGui {
                         MainWindow.getCoordinator().getUserInstance().userDetailsManipulation(query)
                 ){
                    userNameChangeField.setText("");
-                   Alert success = new Alert(Alert.AlertType.CONFIRMATION);
+                    Alert success = new Alert(Alert.AlertType.INFORMATION);
                    success.setContentText("Username correctly changed.");
                    MainWindow.getCoordinator().getUserInstance().userDetailsManipulation(
                             "ALTER TABLE public.'"+
@@ -106,7 +101,7 @@ public class UserOptionsGui {
                 if(MainWindow.getCoordinator().getUserInstance().userDetailsManipulation(query)){
 
                     userPasswordField.setText("");
-                    Alert success = new Alert(Alert.AlertType.CONFIRMATION);
+                    Alert success = new Alert(Alert.AlertType.INFORMATION);
                     success.setContentText("Password changed");
                     success.showAndWait();
                 }else {
@@ -115,24 +110,23 @@ public class UserOptionsGui {
                     fail.showAndWait();
                 }
 
-            }else{
+            } else {
                 ErrorWindow errorWindow = new ErrorWindow("Missing details.");
                 errorWindow.show();
             }
         });
 
-        // TODO CONTINUA QUI
-        currentGrid.add(userLabel,0,0);
-        currentGrid.add(userNameChangeField,1,0);
-        currentGrid.add(changeUsername,1,1);
-        currentGrid.add(passwordLabel,2,0);
-        currentGrid.add(userPasswordField,2,1);
-        currentGrid.add(changePassword,2,2);
-        currentGrid.add(exit,3,0);
+        currentGrid.add(userLabel, 0, 0);
+        currentGrid.add(userNameChangeField, 1, 0);
+        currentGrid.add(changeUsername, 2, 0);
+        currentGrid.add(passwordLabel, 0, 1);
+        currentGrid.add(userPasswordField, 1, 1);
+        currentGrid.add(changePassword, 2, 1);
+        currentGrid.add(exit, 2, 2);
 
         return new Scene(currentGrid);
 
-}
+    }
 
     public void display() {
         this.currentWindow.initModality(javafx.stage.Modality.APPLICATION_MODAL);

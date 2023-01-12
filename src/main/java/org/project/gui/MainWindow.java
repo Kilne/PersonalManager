@@ -96,8 +96,9 @@ public class MainWindow extends Application implements Runnable {
                                                             ((Label) cardElement).setText(p.getP_name());
                                                     case "projectDescriptionField" ->
                                                             ((Label) cardElement).setText(p.getP_description());
-                                                    case "projectDeadlineField" ->
-                                                            ((Label) cardElement).setText(p.getP_dueDate().toString());
+                                                    case "projectDeadlineField" -> ((Label) cardElement).setText(
+                                                            p.getP_dueDate().toString().split("T")[0]
+                                                    );
                                                     case "targetField" -> ((Label) cardElement).setText(
                                                             p.getP_target().toString());
                                                     case "progressField" -> ((ProgressBar) cardElement).setProgress(
