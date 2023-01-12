@@ -26,15 +26,6 @@ public class MyPostgreWrapper implements CommonDatabaseActions,
     }
 
     /**
-     * Get url of the database.
-     *
-     * @return Url of the database.
-     */
-    public String getUrl() {
-        return this.url;
-    }
-
-    /**
      * Check if the connection is established.
      *
      * @return True if the connection is established, false otherwise.

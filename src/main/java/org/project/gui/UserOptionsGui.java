@@ -1,10 +1,17 @@
 package org.project.gui;
 
+import io.github.cdimascio.dotenv.Dotenv;
+import io.github.cdimascio.dotenv.DotenvEntry;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+
+import java.security.KeyException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Set;
 
 /**
  * Current user options
@@ -63,12 +70,22 @@ public class UserOptionsGui {
                                 " RENAME TO "+
                                 userNameChangeField.getText();
 
+                String oldUser = MainWindow.getCoordinator().getUserInstance().getCurrentUser();
+                // TODO FAR RE INSERIRE I DATI CON UN DIALOG
+                Dialog<HashMap<String,String>> insertYourDataAgain = new Dialog<>();
+
+
+
                 if(
-                        MainWindow.getCoordinator().getUserInstance().userDetailsManipulation(query)
+                        MainWindow.getCoordinator().getUserInstance().disconnect() &&
+                                MainWindow.getCoordinator().getMediatorInstance().userDetailsManipulation(query)
                 ){
                    userNameChangeField.setText("");
-                    Alert success = new Alert(Alert.AlertType.INFORMATION);
+                   Alert success = new Alert(Alert.AlertType.INFORMATION);
                    success.setContentText("Username correctly changed.");
+                   // TODO NON PUOI CONNETTERTI COL VECCHIO URL MA DEVI FARNE UN SET NEW CONNECTION CON DATI
+                    MainWindow.getCoordinator().getUserInstance().setNewConnection();
+                   MainWindow.getCoordinator().getUserInstance().connect();
                    MainWindow.getCoordinator().getUserInstance().userDetailsManipulation(
                             "ALTER TABLE public.'"+
                                     MainWindow.getCoordinator().getUserInstance().getCurrentUser()+
