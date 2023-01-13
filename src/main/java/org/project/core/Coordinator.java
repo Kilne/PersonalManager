@@ -13,6 +13,7 @@ import java.util.HashMap;
  * <br>
  * @author luca maiuri
  */
+@SuppressWarnings("unused")
 public class Coordinator {
 
     private final HashMap<String, PersonalManagerORM> userProjects;

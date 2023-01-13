@@ -97,7 +97,6 @@ public class UserProjectList {
             mainWindow.populateProjects();
         });
         userOptions.setOnAction(e -> {
-            // TODO fare le opzioni di un user, delete e cosi via.
             UserOptionsGui userOptionsGui = new UserOptionsGui(this.mainWindow);
             userOptionsGui.display();
         });

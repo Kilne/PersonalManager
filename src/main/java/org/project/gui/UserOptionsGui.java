@@ -5,6 +5,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import org.project.core.DatabaseFacade;
 
 /**
  * Current user options
@@ -45,8 +46,7 @@ public class UserOptionsGui {
         Button exit = new Button("Exit");
         Button changeUsername = new Button("Change username");
         Button changePassword = new Button("Change password");
-
-        // TODO FARE IL PULSANTE DI KILL YOURSELF
+        Button killYourself = new Button("Delete your account");
 
         // Actions
         exit.setOnAction(e -> this.currentWindow.close());
@@ -143,12 +143,56 @@ public class UserOptionsGui {
             }
         });
 
+        killYourself.setOnAction(e->{
+
+            DatabaseFacade mediator = MainWindow.getCoordinator().getMediatorInstance();
+            DatabaseFacade userIst = MainWindow.getCoordinator().getUserInstance();
+            String currentUser= MainWindow.getCoordinator().getUserInstance().getCurrentUser();
+
+            Dialog<ButtonType> confirm = new Dialog<>();
+
+            confirm.setContentText("Are you sure about it?");
+            confirm.getDialogPane().getButtonTypes().add(ButtonType.OK);
+            confirm.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
+            confirm.showAndWait();
+            if( confirm.getResult() == ButtonType.OK ){
+
+                if(userIst.disconnect()){
+
+                    if( mediator.removeUserFromDatabase(currentUser)){
+
+                        Alert success = new Alert(Alert.AlertType.INFORMATION);
+                        success.setContentText("Successfully deleted the user");
+                        success.showAndWait();
+                        this.currentWindow.close();
+                        this.mainGuiWindow.changeScene("Login");
+
+                    }else{
+                        ErrorWindow errorWindow =
+                                new ErrorWindow("Could not disconnect the user.");
+                        errorWindow.show();
+                        userIst.connect();
+                    }
+
+                }else{
+
+                    ErrorWindow errorWindow=
+                            new ErrorWindow("Could not disconnect the client.\n" +
+                                    "Nothing has been changed.");
+                    errorWindow.show();
+                }
+
+            }
+        });
+
+        // Add elements to the grid
         currentGrid.add(userLabel, 0, 0);
         currentGrid.add(userNameChangeField, 1, 0);
         currentGrid.add(changeUsername, 2, 0);
         currentGrid.add(passwordLabel, 0, 1);
         currentGrid.add(userPasswordField, 1, 1);
         currentGrid.add(changePassword, 2, 1);
+        currentGrid.add(killYourself,0,2);
         currentGrid.add(exit, 2, 2);
 
         return new Scene(currentGrid);
