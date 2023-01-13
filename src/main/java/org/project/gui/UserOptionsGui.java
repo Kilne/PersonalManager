@@ -1,17 +1,10 @@
 package org.project.gui;
 
-import io.github.cdimascio.dotenv.Dotenv;
-import io.github.cdimascio.dotenv.DotenvEntry;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-
-import java.security.KeyException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Set;
 
 /**
  * Current user options
@@ -65,41 +58,51 @@ public class UserOptionsGui {
                             !userNameChangeField.getText().isEmpty()
             ){
                 String query =
-                        "ALTER USER "+
-                                MainWindow.getCoordinator().getUserInstance().getCurrentUser()+
-                                " RENAME TO "+
+                        "ALTER USER " +
+                                MainWindow.getCoordinator().getUserInstance().getCurrentUser() +
+                                " RENAME TO " +
                                 userNameChangeField.getText();
 
                 String oldUser = MainWindow.getCoordinator().getUserInstance().getCurrentUser();
                 // TODO FAR RE INSERIRE I DATI CON UN DIALOG
-                Dialog<HashMap<String,String>> insertYourDataAgain = new Dialog<>();
+                UserChangePasswordPrompt userChangePasswordPrompt = new UserChangePasswordPrompt();
+                userChangePasswordPrompt.display();
+                String password = userChangePasswordPrompt.getPassword();
 
+                if (password.isBlank() || password.isEmpty()) {
+                    ErrorWindow errorWindow = new ErrorWindow("Password cannot be empty");
+                    userNameChangeField.clear();
+                    userPasswordField.clear();
+                    errorWindow.show();
+                } else {
+                    if (
+                            MainWindow.getCoordinator().getUserInstance().disconnect() &&
+                                    MainWindow.getCoordinator().getMediatorInstance().userDetailsManipulation(query)
+                    ) {
+                        userNameChangeField.setText("");
+                        Alert success = new Alert(Alert.AlertType.INFORMATION);
+                        success.setContentText("Username correctly changed.");
+                        // TODO NON PUOI CONNETTERTI COL VECCHIO URL MA DEVI FARNE UN SET NEW CONNECTION CON DATI
+                        String[] dbInfo = MainWindow.getCoordinator().getMediatorInstance().getClientInfo();
+                        MainWindow.getCoordinator().getUserInstance().setNewConnection(
 
-
-                if(
-                        MainWindow.getCoordinator().getUserInstance().disconnect() &&
-                                MainWindow.getCoordinator().getMediatorInstance().userDetailsManipulation(query)
-                ){
-                   userNameChangeField.setText("");
-                   Alert success = new Alert(Alert.AlertType.INFORMATION);
-                   success.setContentText("Username correctly changed.");
-                   // TODO NON PUOI CONNETTERTI COL VECCHIO URL MA DEVI FARNE UN SET NEW CONNECTION CON DATI
-                    MainWindow.getCoordinator().getUserInstance().setNewConnection();
-                   MainWindow.getCoordinator().getUserInstance().connect();
-                   MainWindow.getCoordinator().getUserInstance().userDetailsManipulation(
-                            "ALTER TABLE public.'"+
-                                    MainWindow.getCoordinator().getUserInstance().getCurrentUser()+
-                                    "' RENAME TO"+
-                                    userNameChangeField.getText()
-                   );
-                   this.mainGuiWindow.setUsername();
-                   this.mainGuiWindow.populateProjects();
-                   success.showAndWait();
-                }else {
-                    Alert fail = new Alert(Alert.AlertType.ERROR);
-                    fail.setContentText("There was an error with changing the username");
-                    userNameChangeField.setText("");
-                    fail.showAndWait();
+                        );
+                        MainWindow.getCoordinator().getUserInstance().connect();
+                        MainWindow.getCoordinator().getUserInstance().userDetailsManipulation(
+                                "ALTER TABLE public.'" +
+                                        MainWindow.getCoordinator().getUserInstance().getCurrentUser() +
+                                        "' RENAME TO" +
+                                        userNameChangeField.getText()
+                        );
+                        this.mainGuiWindow.setUsername();
+                        this.mainGuiWindow.populateProjects();
+                        success.showAndWait();
+                    } else {
+                        Alert fail = new Alert(Alert.AlertType.ERROR);
+                        fail.setContentText("There was an error with changing the username");
+                        userNameChangeField.setText("");
+                        fail.showAndWait();
+                    }
                 }
             }else{
                 ErrorWindow errorWindow = new ErrorWindow("Missing details.");

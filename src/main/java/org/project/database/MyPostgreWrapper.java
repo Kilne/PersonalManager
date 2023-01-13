@@ -1,6 +1,9 @@
 package org.project.database;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Vector;
@@ -247,9 +250,22 @@ public class MyPostgreWrapper implements CommonDatabaseActions,
      * Gets the database user.
      * @return The database user. Or an empty string if the connection is not established.
      */
-    public String getCurrentUser(){
+    public String getCurrentUser() {
         try {
             return this.connection.getMetaData().getUserName();
+        } catch (SQLException e) {
+            return "";
+        }
+    }
+
+    public String getDatabaseName() {
+        try {
+
+            if (this.isConnected()) {
+
+                // TODO CONTINUA QUI!!!
+            }
+
         } catch (SQLException e) {
             return "";
         }
