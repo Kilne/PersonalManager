@@ -28,14 +28,12 @@ public class UserChangePasswordPrompt {
             e.consume();
             window.close();
         });
-        Label label = new Label("Insert new password");
+        Label label = new Label("Insert your password");
         PasswordField passwordField = new PasswordField();
         passwordField.setPromptText("Password");
         Button confirmButton = new Button("Confirm");
         Button cancelButton = new Button("Cancel");
-        cancelButton.setOnAction(e -> {
-            window.close();
-        });
+        cancelButton.setOnAction(e -> window.close());
         confirmButton.setOnAction(e -> {
             this.password = passwordField.getText();
             window.close();

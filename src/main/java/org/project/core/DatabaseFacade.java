@@ -138,7 +138,7 @@ public class DatabaseFacade {
         String syncRes = this.database.select(
                 this.queryBuilder.setQueryType(QueryType.SELECT).setTable(table).buildQuery().getQuery()
         );
-        if (!syncRes.isBlank() && !syncRes.isEmpty()) {
+        if ((!syncRes.isBlank() && !syncRes.isEmpty()) && !syncRes.equals("null")) {
             if (syncRes.contains(",")) {
                 String[] rows = syncRes.split(",");
                 for (String row : rows) {
@@ -300,6 +300,7 @@ public class DatabaseFacade {
 
     /**
      * Returns the database host and port.
+     *
      * @return The database host and port in array format.
      */
     public String[] getClientInfo() {
@@ -307,10 +308,20 @@ public class DatabaseFacade {
     }
 
     /**
+     * Returns the database name.
+     *
+     * @return The database name.
+     */
+    public String getDatabaseName() {
+        return this.database.getDatabaseName();
+    }
+
+    /**
      * Get the current user.
+     *
      * @return The current user. Or an empty string if no connection is established.
      */
-    public String getCurrentUser(){
+    public String getCurrentUser() {
         return this.database.getCurrentUser();
     }
 }

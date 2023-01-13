@@ -152,6 +152,13 @@ public class MainWindow extends Application implements Runnable {
         );
     }
 
+    /**
+     * Close the application.
+     */
+    public void close() {
+        this.window.close();
+    }
+
     @Override
     public void run() {
         launch();

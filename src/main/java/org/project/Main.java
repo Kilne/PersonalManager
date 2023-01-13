@@ -1,7 +1,6 @@
 package org.project;
 
 import io.github.cdimascio.dotenv.Dotenv;
-import javafx.application.Application;
 import org.project.core.Coordinator;
 import org.project.core.DiscoverDatabase;
 import org.project.gui.MainWindow;

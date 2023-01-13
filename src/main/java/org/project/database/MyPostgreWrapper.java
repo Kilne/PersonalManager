@@ -258,16 +258,4 @@ public class MyPostgreWrapper implements CommonDatabaseActions,
         }
     }
 
-    public String getDatabaseName() {
-        try {
-
-            if (this.isConnected()) {
-
-                // TODO CONTINUA QUI!!!
-            }
-
-        } catch (SQLException e) {
-            return "";
-        }
-    }
 }

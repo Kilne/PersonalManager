@@ -46,17 +46,16 @@ public class UserOptionsGui {
         Button changeUsername = new Button("Change username");
         Button changePassword = new Button("Change password");
 
+        // TODO FARE IL PULSANTE DI KILL YOURSELF
+
         // Actions
-        exit.setOnAction(e -> {
-            this.currentWindow.close();
-        });
+        exit.setOnAction(e -> this.currentWindow.close());
 
         changeUsername.setOnAction(e -> {
-            // TODO NON PUOI RINOMINARE L'UTENTE IN SESSIONE
-            if(
+            if (
                     !userNameChangeField.getText().isBlank() &&
                             !userNameChangeField.getText().isEmpty()
-            ){
+            ) {
                 String query =
                         "ALTER USER " +
                                 MainWindow.getCoordinator().getUserInstance().getCurrentUser() +
@@ -64,7 +63,6 @@ public class UserOptionsGui {
                                 userNameChangeField.getText();
 
                 String oldUser = MainWindow.getCoordinator().getUserInstance().getCurrentUser();
-                // TODO FAR RE INSERIRE I DATI CON UN DIALOG
                 UserChangePasswordPrompt userChangePasswordPrompt = new UserChangePasswordPrompt();
                 userChangePasswordPrompt.display();
                 String password = userChangePasswordPrompt.getPassword();
@@ -79,24 +77,33 @@ public class UserOptionsGui {
                             MainWindow.getCoordinator().getUserInstance().disconnect() &&
                                     MainWindow.getCoordinator().getMediatorInstance().userDetailsManipulation(query)
                     ) {
-                        userNameChangeField.setText("");
-                        Alert success = new Alert(Alert.AlertType.INFORMATION);
-                        success.setContentText("Username correctly changed.");
-                        // TODO NON PUOI CONNETTERTI COL VECCHIO URL MA DEVI FARNE UN SET NEW CONNECTION CON DATI
                         String[] dbInfo = MainWindow.getCoordinator().getMediatorInstance().getClientInfo();
                         MainWindow.getCoordinator().getUserInstance().setNewConnection(
-
+                                dbInfo[0],
+                                Integer.parseInt(dbInfo[1]),
+                                MainWindow.getCoordinator().getMediatorInstance().getDatabaseName(),
+                                userNameChangeField.getText(),
+                                password
                         );
-                        MainWindow.getCoordinator().getUserInstance().connect();
-                        MainWindow.getCoordinator().getUserInstance().userDetailsManipulation(
-                                "ALTER TABLE public.'" +
-                                        MainWindow.getCoordinator().getUserInstance().getCurrentUser() +
-                                        "' RENAME TO" +
-                                        userNameChangeField.getText()
-                        );
-                        this.mainGuiWindow.setUsername();
-                        this.mainGuiWindow.populateProjects();
-                        success.showAndWait();
+                        if (MainWindow.getCoordinator().getUserInstance().connect()) {
+                            MainWindow.getCoordinator().getMediatorInstance().userDetailsManipulation(
+                                    "ALTER TABLE " +
+                                            oldUser +
+                                            " RENAME TO " +
+                                            userNameChangeField.getText()
+                            );
+                            userNameChangeField.setText("");
+                            Alert success = new Alert(Alert.AlertType.INFORMATION);
+                            success.setContentText("Username correctly changed.");
+                            this.mainGuiWindow.setUsername();
+                            this.mainGuiWindow.populateProjects();
+                            success.showAndWait();
+                        } else {
+                            ErrorWindow errorWindow = new ErrorWindow("Cannot connect to the database.");
+                            errorWindow.show();
+                            this.currentWindow.close();
+                            this.mainGuiWindow.close();
+                        }
                     } else {
                         Alert fail = new Alert(Alert.AlertType.ERROR);
                         fail.setContentText("There was an error with changing the username");
