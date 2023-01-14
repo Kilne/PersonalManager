@@ -28,7 +28,7 @@
     BCOR5mm, % Binding correction
 ]{scrartcl}
 
-\input{structure.tex} % Include the structure.tex file which specified the document structure and layout
+\input{structure} % Include the structure.tex file which specified the document structure and layout
 
 \hyphenation{Fortran hy-phen-ation} % Specify custom hyphenation points in words with dashes where you would like hyphenation to occur, or alternatively, don't put any dashes in a word to stop hyphenation altogether
 
@@ -42,7 +42,7 @@
 
 \author{Luca Maiuri: MAT.0124001418} % The article author(s) - author affiliations need to be specified in the AUTHOR AFFILIATIONS block
 
-\date{} % An optional date to appear under the author(s)
+%\date{} % An optional date to appear under the author(s)
 
 %----------------------------------------------------------------------------------------
 
@@ -77,146 +77,198 @@
     \newpage % Start the article content on the second page, remove this if you have a longer abstract that goes onto the second page
 
 %----------------------------------------------------------------------------------------
-%	INTRODUCTION
+%	INTRODUZIONE
 %----------------------------------------------------------------------------------------
 
 
     \section{Introduzione}\label{sec:introduction}
 
+    Il progetto presentato vuole imitare il comportamento di una webApp che gestisce i progetti personali di un utente
+    e il loro progresso, inoltre fornire informazioni sulle quantità da impiegare di volta in volta per raggiungere
+    l'obbiettivo prefissato.
+    Non avendo a disposizione uno spazio online per la gestione della webApp, si è optato nel riprodurre la maggior
+    parte delle funzionalità della webApp in un ambiente locale, utilizzando un database locale per la memorizzazione
+    dei dati e anche come supporto per la gestione degli utenti.
 
 %----------------------------------------------------------------------------------------
-%	METHODS
+%	REQUISITI ED ANALISI
 %----------------------------------------------------------------------------------------
 
 
-    \section{Methods}\label{sec:methods}
+    \section{Requisti}\label{sec:Requisiti}
+
+    Il progetto soddisfa i seguenti requisiti:
 
     \begin{enumerate}[noitemsep] % [noitemsep] removes whitespace between the items for a compact look
-        \item First item in a list
-        \item Second item in a list
-        \item Third item in a list
+        \item Login, logout e registrazione di un utente.
+        \item Modifica dei dati dell'utente, inclusa la cancellazione.
+        \item Visualizzazione dei progetti dell'utente, e delle informazioni relative a essi.
+        \item Aggiunta, eliminazione e modifica di un progetto e delle sue informazioni.
     \end{enumerate}
 
+    Il tutto è accompagnato da un GUI grafica minimale ma funzionale.
 %------------------------------------------------
 
-    \subsection{Paragraphs}
+    \subsection{Implementazione dei requisiti}\label{subsec:implementazione}
 
-    \paragraph{Paragraph Description}
-
-    \paragraph{Different Paragraph Description}
-
-%------------------------------------------------
-
-    \subsection{Math}\label{subsec:math}
-
-    \begin{equation}
-        \cos^3 \theta =\frac{1}{4}\cos\theta+\frac{3}{4}\cos 3\theta
-        \label{eq:refname2}
-    \end{equation}
-
-    \begin{definition}[Gauss]
-        To a mathematician it is obvious that
-        $\int_{-\infty}^{+\infty}
-        e^{-x^2}\,dx=\sqrt{\pi}$.
-    \end{definition}
-
-    \begin{theorem}[Pythagoras]
-        The square of the hypotenuse (the side opposite the right angle) is equal to the sum of the squares of the other two sides.
-    \end{theorem}
-
-    \begin{proof}
-        We have that $\log(1)^2 = 2\log(1)$.
-        But we also have that $\log(-1)^2=\log(1)=0$.
-        Then $2\log(-1)=0$, from which the proof.
-    \end{proof}
-
-%----------------------------------------------------------------------------------------
-%	RESULTS AND DISCUSSION
-%----------------------------------------------------------------------------------------
+    I requisiti sono stati implementati utilizzando il linguaggio di programmazione Java;
+    la gui è stata implementata utilizzando JavaFX\@.
+    La gestione dei dati è affidata a un database locale, in particolare PostgreSQL, che viene utilizzato
+    tramite JDBC\@.
 
 
-    \section{Results and Discussion}\label{sec:results-and-discussion}
+    \section{Diagramma delle classi}\label{sec:diagramma}
 
-    Reference to Figure~\vref{fig:gallery}. % The \vref command specifies the location of the reference
+    Di seguito è riportato il diagramma delle classi del progetto, che mostra le relazioni tra le classi
+    e le interfacce implementate.
+    Tutti i diagrammi sono stati realizzati tramite il sistema integrato nell'IDE jetBrains Intellij IDEA\@.
+    \vspace{0.5cm}
+    La struttura dei pacchetti del progetto a cui fanno riferimento le classi è riportata come segue:
 
-    \begin{figure}[tb]
-        \centering
-        \includegraphics[width=0.5\columnwidth]{GalleriaStampe}
-        \caption[An example of a floating figure]{An example of a floating figure (a reproduction from the \emph{Gallery of prints}, M.~Escher,\index{Escher, M.~C.} from \url{http://www.mcescher.com/}).} % The text in the square bracket is the caption for the list of figures while the text in the curly brackets is the figure caption
-        \label{fig:gallery}
-    \end{figure}
-
-    \lipsum[10] % Dummy text
-
-%------------------------------------------------
-
-    \subsection{Subsection}\label{subsec:subsection}
-
-    \subsubsection{Subsubsection}
-
-
-
-    \begin{description}
-        \item[Word] Definition
-        \item[Concept] Explanation
-        \item[Idea] Text
-    \end{description}
-
-
-
-    \begin{itemize}[noitemsep] % [noitemsep] removes whitespace between the items for a compact look
-        \item First item in a list
-        \item Second item in a list
-        \item Third item in a list
+    \begin{itemize}
+        \item org.project \begin{itemize}
+                              \item org.project.core \begin{itemize}
+                                                         \item org.project.core.adapters
+                              \end{itemize}
+                              \item org.project.database
+                              \item org.project.ORM
+                              \item org.project.GUI
+        \end{itemize}
     \end{itemize}
 
-    \subsubsection{Table}
+    \subsection{org.project.core}\label{subsec:core}
 
-    \begin{table}[hbt]
-        \caption{Table of Grades}
-        \centering
-        \begin{tabular}{llr}
-            \toprule
-            \multicolumn{2}{c}{Name} \\
-            \cmidrule(r){1-2}
-            First name & Last Name & Grade \\
-            \midrule
-            John       & Doe       & $7.5$ \\
-            Richard    & Miles     & $2$   \\
-            \bottomrule
-        \end{tabular}
-        \label{tab:label}
-    \end{table}
-
-    Reference to Table~\vref{tab:label}. % The \vref command specifies the location of the reference
-
-%------------------------------------------------
-
-    \subsection{Figure Composed of Subfigures}\label{subsec:figure-composed-of-subfigures}
-
-    Reference the figure composed of multiple subfigures as Figure~\vref{fig:esempio}.
-    Reference one of the subfigures as Figure~\vref{fig:ipsum}. % The \vref command specifies the location of the reference
+    Il pacchetto org.project.core[\ref{fig:diagrammaClassiCore}] contiene le classi che implementano la funzionalità
+    del progetto che riguardano la gestione delle istanze sia degli utenti che della sessione con permessi privilegiati
+    al database, inoltre contiene le classi che contengono la logica di creazione e modifica dei progetti.
 
     \begin{figure}[tb]
         \centering
-        \subfloat[A city market.]{\includegraphics[width=.45\columnwidth]{Lorem}} \quad
-        \subfloat[Forest landscape.]{\includegraphics[width=.45\columnwidth]{Ipsum}\label{fig:ipsum}} \\
-        \subfloat[Mountain landscape.]{\includegraphics[width=.45\columnwidth]{Dolor}} \quad
-        \subfloat[A tile decoration.]{\includegraphics[width=.45\columnwidth]{Sit}}
-        \caption[A number of pictures.]{A number of pictures with no common theme.} % The text in the square bracket is the caption for the list of figures while the text in the curly brackets is the figure caption
-        \label{fig:esempio}
+        \includegraphics[width=0.8\textwidth]{Figures/UML/CORE}
+        \caption{Diagramma delle classi del pacchetto org.project.core}
+        \label{fig:diagrammaClassiCore}
+    \end{figure}
+
+    \subsection{org.project.database}\label{subsec:database}
+
+    Il pacchetto org.project.database[\ref{fig:diagrammaClassiDatabase}] contiene le classi che
+    implementano l'interazione con il database: connessione,
+    creazione e modifica delle tabelle, inserimento, modifica e cancellazione dei dati tramite operazioni SQL/CRUD\@.
+    Si tratta principalmente di classi wrapper per la libreria JDBC\@.
+
+    \begin{figure}[tb]
+        \centering
+        \includegraphics[width=0.8\textwidth]{Figures/UML/DATABASE}
+        \caption{Diagramma delle classi del pacchetto org.project.database}
+        \label{fig:diagrammaClassiDatabase}
+    \end{figure}
+
+    \subsection{org.project.ORM}\label{subsec:ORM}
+
+    Il pacchetto org.project.ORM[\ref{fig:diagrammaClassiORM}] contiene le classi che implementano l'object relational
+    mapping, ovvero la mappatura tra le classi Java e le tabelle del database, ed i metodi per la gestione dei dati da
+    essi contenuti.
+
+    \begin{figure}[tb]
+        \centering
+        \includegraphics[width=0.8\textwidth]{Figures/UML/ORM}
+        \caption{Diagramma delle classi del pacchetto org.project.ORM}
+        \label{fig:diagrammaClassiORM}
+    \end{figure}
+
+    \subsection{org.project.GUI}\label{subsec:GUI}
+
+    Il pacchetto org.project.GUI[\ref{fig:diagrammaClassiGUI}] contiene le classi che implementano la GUI del progetto.
+
+    \begin{figure}[tb]
+        \centering
+        \includegraphics[width=0.8\textwidth]{Figures/UML/GUI}
+        \caption{Diagramma delle classi del pacchetto org.project.GUI}
+        \label{fig:diagrammaClassiGUI}
+    \end{figure}
+
+    \subsection{org.project.adapters}\label{subsec:adapters}
+
+    Il pacchetto org.project.core.adapters[\ref{fig:diagrammaClassiAdapters}] contiene le classi che implementano
+    l'adattamento dei dati tra le classi Java e il database, in particolare la conversione dei dati da e verso le
+    classi Java e le tabelle del database.
+
+    \begin{figure}[tb]
+        \centering
+        \includegraphics[width=0.8\textwidth]{Figures/UML/ADAPTERS}
+        \caption{Diagramma delle classi del pacchetto org.project.core.adapters}
+        \label{fig:diagrammaClassiAdapters}
     \end{figure}
 
 %----------------------------------------------------------------------------------------
-%	BIBLIOGRAPHY
+%	DETTAGLI IMPLEMENTAZIONE E CODICE
 %----------------------------------------------------------------------------------------
 
-    \renewcommand{\refname}{\spacedlowsmallcaps{References}} % For modifying the bibliography heading
 
-    \bibliographystyle{unsrt}
+    \section{Dettagli implementazione}\label{sec:dettagli}
 
-    \bibliography{sample} % The file containing the bibliography
+    Questa sezione descrive i dettagli implementativi del progetto a livello di codice, e le scelte effettuate
+    durante lo sviluppo a livello di architettura.
 
-%----------------------------------------------------------------------------------------
+    \subsection{Architettura del progetto}\label{subsec:architettura}
+
+    Il progetto è stato sviluppato utilizzando il paradigma di programmazione orientata agli oggetti, è stato
+    fatto utilizzo di alcuni design pattern, ove è stato possibile si è cercato di aderire ai principi SOLID\@.
+    L'intero progetto verte sull'esistenza di un database raggiungibile tramite composizione di un url a partire
+    da dati pre\-esistenti, nel nostro caso un database PostgreSQL in localhost, che viene utilizzato come
+    database di riferimento per la gestione dei dati e anche come autenticazione per l'accesso al programma.
+    Il programma in se e per se può essere ridotto a un semplice client che si interfaccia con il database,
+    ne manipola i dati e li visualizza in una GUI, questo è dovuto all'idea di partenza di ``imitare`` un webClient
+    il cui scopo era interfacciarsi con un webApp nella rete.
+    In alcune sue parti il programma è stato sviluppato in modo da essere facilmente estendibile,
+    in particolare la parte relativa ai wrapper del database, altre parti come la GUI risultano più difficili(se
+    non impossibili) da estendere o modificare.
+
+    \subsection{Design pattern}\label{subsec:designPattern}
+
+    Si è fatto uso di alcuni design pattern, nello specifico:
+
+    \begin{itemize}
+        \item \textbf{Builder}: implementato per la creazione dell'url del database e delle stringhe di query, con
+        metodi in cascata, uno snippet del codice per la costruzione di query SQL è riportato in nella
+        Lst.[~\ref{lst:snippetbuilder}].
+        \item \textbf{Factory}: implementato per la creazione di oggetti di tipo ORM specifici per un dato tipo
+        di tabella e database~\textsuperscript{\ref{lst:snippetfactory}}
+        \item \textbf{Adapter}: implementato per la conversione dei dati tra le classi Java e le tabelle del
+        database tramite oggetti creati tramite l'ORM factory, tramite l'interfaccia \textit{AdapterDataDB.java} vengono
+        implementati dei metodi per la conversione dei dati nella classe concreta \textit{MyPostgresDataProcess.java}
+        frammenti di codice delle due classi sono riportati nella Lst.[\ref{lst:snippetadapter}]
+
+    \end{itemize}
+
+    \begin{lstlisting}[caption={Frammento di codice da PostgreQueryBuilder.java}, label={lst:snippetbuilder}]
+        ...
+
+        /**
+        * Builds the query depending on the query type
+        *
+        * @return the object with a built query set
+        */
+        public PostgreQueryBuilder buildQuery() {
+            this.query = switch (this.type) {
+            case INSERT -> addColumnsAndValues(insert);
+            case UPDATE -> addColumnsAndValues(update);
+            case DELETE -> addColumnsAndValues(delete);
+            case SELECT -> select.replace("tablename", this.table);
+            };
+            return this;
+        }
+
+        public String getQuery() {
+            return query;
+        }
+        ...
+    \end{lstlisting}
+    \newpage
+    \lstinputlisting[caption={FactoryORM.java},label={lst:snippetfactory}]
+    {../../src/main/java/org/project/ORM/FactoryORM.java}
+    \lstinputlisting[caption={Interfaccia AdapterDataDB },label={lst:snippetadapter}]
+    {../../src/main/java/org/project/core/adapters/AdapterDataDB.java}
+
 
 \end{document}
