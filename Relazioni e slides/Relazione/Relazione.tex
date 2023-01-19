@@ -238,6 +238,8 @@
         database tramite oggetti creati tramite l'ORM factory, tramite l'interfaccia \textit{AdapterDataDB.java} vengono
         implementati dei metodi per la conversione dei dati nella classe concreta \textit{MyPostgresDataProcess.java}
         frammenti di codice delle due classi sono riportati nella Lst.[\ref{lst:snippetadapter}]
+        \item \textbf{Facade}: implementato per la creazione di un unico oggetto che gestisca le varie funzioni
+        derivanti dalla classe del database e faccia da contenitore per le due istanze del DBMS( utente e privilegiata).
 
     \end{itemize}
 
